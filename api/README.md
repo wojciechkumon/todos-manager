@@ -31,3 +31,5 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+
+See `package.json` for more commands.
