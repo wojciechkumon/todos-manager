@@ -1,0 +1,16 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16.2-alpine3.19
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_volume:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: todos
+      POSTGRES_USER: todo-user
+      POSTGRES_PASSWORD: p4ssw0rd
+
+volumes:
+  postgres_data_volume:
