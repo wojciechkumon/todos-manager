@@ -7,7 +7,7 @@ const SALT_OR_ROUNDS = 12;
 
 @Injectable()
 export class AuthService {
-  constructor(private usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) {}
 
   async register(registrationDto: RegistrationDto): Promise<void> {
     // todo handle user already exists case

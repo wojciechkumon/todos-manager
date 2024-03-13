@@ -4,7 +4,7 @@ import { RegistrationDto } from './dto/registration.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @HttpCode(HttpStatus.CREATED)
   @Post('registration')
