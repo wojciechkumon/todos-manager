@@ -4,7 +4,7 @@ import { IsEmailUnique } from '../../users/validators/IsEmailUnique';
 export class RegistrationDto {
   @IsEmail()
   @MaxLength(254)
-  @IsEmailUnique({ message: 'Email already exists'})
+  @IsEmailUnique({ message: 'Email already exists' })
   email: string;
 
   @IsStrongPassword({

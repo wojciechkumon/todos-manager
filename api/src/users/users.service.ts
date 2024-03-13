@@ -11,12 +11,13 @@ export class UsersService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
-  async register(createUserDto: CreateUserDto): Promise<void> {
+  async register(createUserDto: CreateUserDto): Promise<string> {
     const user = new User();
     user.email = createUserDto.email;
     user.passwordHash = createUserDto.passwordHash;
     try {
-      await this.usersRepository.insert(user);
+      const { identifiers } = await this.usersRepository.insert(user);
+      return identifiers[0].id;
     } catch (e) {
       // todo throw exception and handle returning HTTP code
       console.error('error: ', e);
