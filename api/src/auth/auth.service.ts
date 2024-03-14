@@ -7,7 +7,7 @@ import { JwtDto } from './dto/jwt.dto';
 
 const SALT_OR_ROUNDS = 12;
 
-interface JwtPayload {
+export interface JwtPayload {
   sub: string; // user ID
   email: string;
 }
@@ -24,7 +24,6 @@ export class AuthService {
   ) {}
 
   async register(registrationDto: RegistrationDto): Promise<JwtDto> {
-    // todo handle user already exists case
     const passwordHash = await bcrypt.hash(
       registrationDto.password,
       SALT_OR_ROUNDS,

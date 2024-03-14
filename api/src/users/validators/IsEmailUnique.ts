@@ -12,7 +12,7 @@ import { UsersService } from '../users.service';
 export class IsEmailUniqueValidator implements ValidatorConstraintInterface {
   constructor(private readonly usersService: UsersService) {}
 
-  async validate(email: string) {
+  async validate(email: string): Promise<boolean> {
     const foundUser = await this.usersService.findByEmail(email);
     return !foundUser;
   }
