@@ -1,8 +1,15 @@
 # Todos Manager API
 
+## Prerequisites
 ### Database
 PostgreSQL database is required to run the application. You can use the docker-compose file to run it.
 Go to `./database-docker` directory and run `docker-compose up` to start the database (it requires [docker](https://docs.docker.com/) installed on your machine).
+
+### Environment variables
+The app uses [dotenv](https://github.com/motdotla/dotenv) configuration.
+You may provide your own `.env` file in this directory or use the default values from the code.
+See `.env.example` to see an example `.env` file with all supported variables.
+The default values for the database use credentials from `./database-docker/docker-compose.yml`, so no need to create or modify any file for development.
 
 
 ## Dependencies installation

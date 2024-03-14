@@ -5,18 +5,27 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { User } from './users/entities/user.entity';
+import { ConfigModule } from '@nestjs/config';
+import { configuration } from './config/configuration';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432, // todo config from .env
-      username: 'todo-user',
-      password: 'p4ssw0rd',
-      database: 'todos',
-      entities: [User],
-      synchronize: true, // todo replace with migrations
+    ConfigModule.forRoot({ load: [configuration] }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: () => {
+        const { database } = configuration();
+        return {
+          type: 'postgres',
+          host: database.host,
+          port: database.port,
+          username: database.user,
+          password: database.password,
+          database: database.dbName,
+          entities: [User],
+          synchronize: true, // todo replace with migrations
+        };
+      },
     }),
     UsersModule,
     AuthModule,

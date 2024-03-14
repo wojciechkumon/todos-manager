@@ -9,7 +9,7 @@ services:
       - postgres_data_volume:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: todos
-      POSTGRES_USER: todo-user
+      POSTGRES_USER: todos-user
       POSTGRES_PASSWORD: p4ssw0rd
 
 volumes:
