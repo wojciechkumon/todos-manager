@@ -23,7 +23,8 @@ import { configuration } from './config/configuration';
           password: database.password,
           database: database.dbName,
           entities: [User],
-          synchronize: true, // todo replace with migrations
+          migrations: ['./dist/database-migrations/*.js'],
+          migrationsRun: true,
         };
       },
     }),

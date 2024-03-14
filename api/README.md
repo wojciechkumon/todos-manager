@@ -49,3 +49,16 @@ $ npm run test:cov
 ```
 
 See `package.json` for more commands.
+
+
+## Development
+
+### Database migrations
+To create a new migration, run the following command:
+
+```
+$ npx typeorm migration:create ./src/database-migrations/MigrationName
+```
+
+They are applied automatically on the app start.
+See more in [typeorm docs](https://typeorm.io/migrations#running-and-reverting-migrations).
