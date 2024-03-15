@@ -62,3 +62,8 @@ $ npx typeorm migration:create ./src/database-migrations/MigrationName
 
 They are applied automatically on the app start.
 See more in [typeorm docs](https://typeorm.io/migrations#running-and-reverting-migrations).
+
+### OpenAPI
+
+The app uses [NestJS Swagger](https://docs.nestjs.com/openapi/introduction) to generate OpenAPI documentation.
+It is available at root (`/`) endpoint.
