@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { INestApplication, Logger, ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { useContainer } from 'class-validator';
 import { configuration } from './config/configuration';
@@ -27,7 +27,7 @@ async function bootstrap() {
   setupOpenApi(app);
 
   const port = configuration().port;
-  console.log(`Listening on http://localhost:${port}`);
+  new Logger('bootstrap').log(`Listening on http://localhost:${port}`);
   await app.listen(port);
 }
 
