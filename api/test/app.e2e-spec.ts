@@ -17,10 +17,10 @@ describe('AppController (e2e)', () => {
 
   afterAll(() => app.close());
 
-  it('/hello (GET)', () => {
+  it('/status (GET)', () => {
     return request(app.getHttpServer())
-      .get('/hello')
+      .get('/status')
       .expect(200)
-      .expect('Hello World!');
+      .expect({ status: 'OK' });
   });
 });

@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { AuthGuard } from './auth/auth.guard';
 import { createMock } from '@golevelup/ts-jest';
 
@@ -10,7 +9,6 @@ describe('AppController', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
-      providers: [AppService],
     })
       .overrideGuard(AuthGuard)
       .useValue(createMock<AuthGuard>())
@@ -23,7 +21,7 @@ describe('AppController', () => {
 
   describe('root', () => {
     it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+      expect(appController.getHello()).toEqual({ status: 'OK' });
     });
   });
 });
