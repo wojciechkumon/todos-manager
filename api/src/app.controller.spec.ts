@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthGuard } from './auth/auth.guard';
+import { createMock } from '@golevelup/ts-jest';
 
 describe('AppController', () => {
   let appController: AppController;
@@ -9,9 +11,14 @@ describe('AppController', () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
       providers: [AppService],
-    }).compile();
+    })
+      .overrideGuard(AuthGuard)
+      .useValue(createMock<AuthGuard>())
+      .compile();
 
     appController = app.get<AppController>(AppController);
+    const authGuard = app.get<AuthGuard>(AuthGuard);
+    (authGuard.canActivate as jest.Mock).mockResolvedValue(true);
   });
 
   describe('root', () => {

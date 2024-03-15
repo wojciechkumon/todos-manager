@@ -10,6 +10,7 @@ import { configuration } from '../config/configuration';
   imports: [
     UsersModule,
     JwtModule.registerAsync({
+      global: true,
       imports: [ConfigModule],
       useFactory: () => ({
         secret: configuration().jwtSecret,
