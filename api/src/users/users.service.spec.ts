@@ -40,9 +40,9 @@ describe('UsersService', () => {
       const id = '375ea706-b908-410e-ba0e-d17253ed7f41';
       const insertSpy = (usersRepository.insert as jest.Mock).mockResolvedValue(
         {
-          identifiers: [{ id: id }],
-          generatedMaps: [{ id: id, createdAt: '2024-03-13T21:25:25.216Z' }],
-          raw: [{ id: id, created_at: '2024-03-13T21:25:25.216Z' }],
+          identifiers: [{ id }],
+          generatedMaps: [{ id, createdAt: '2024-03-13T21:25:25.216Z' }],
+          raw: [{ id, created_at: '2024-03-13T21:25:25.216Z' }],
         } satisfies InsertResult,
       );
 

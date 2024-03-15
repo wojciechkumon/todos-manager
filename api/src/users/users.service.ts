@@ -29,7 +29,8 @@ export class UsersService {
     user.passwordHash = createUserDto.passwordHash;
     try {
       const { identifiers } = await this.usersRepository.insert(user);
-      return identifiers[0].id;
+      const userIdentifier = identifiers[0] as Pick<User, 'id'>;
+      return userIdentifier.id;
     } catch (e) {
       if (e.code === POSTGRES_DUPLICATE_KEY_VIOLATION_CODE) {
         // there is a validation of existing email during input validation but

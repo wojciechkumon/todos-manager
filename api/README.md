@@ -54,14 +54,25 @@ See `package.json` for more commands.
 ## Development
 
 ### Database migrations
-To create a new migration, run the following command:
 
+- To create a new migration, run the following command (replace `MigrationName`):
 ```
-$ npx typeorm migration:create ./src/database-migrations/MigrationName
+$ npm run migration:create -- ./src/database-migrations/MigrationName
 ```
 
-They are applied automatically on the app start.
-See more in [typeorm docs](https://typeorm.io/migrations#running-and-reverting-migrations).
+Migrations are applied automatically on the app start.
+
+- Running manually:
+```
+$ npm run migration:run 
+```
+
+- Reverting the last migration:
+```
+$ npm run migration:revert 
+```
+
+See more details in [typeorm docs](https://typeorm.io/migrations).
 
 ### OpenAPI
 
