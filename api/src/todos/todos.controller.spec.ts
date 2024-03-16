@@ -9,6 +9,8 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { Order, PageOptionsDto } from './dto/page-options.dto';
+import { PageDto } from './dto/page.dto';
 
 describe('TodosController', () => {
   let todosController: TodosController;
@@ -17,7 +19,7 @@ describe('TodosController', () => {
   const todoItemDto: TodoItemDto = {
     id: '08f33151-e5fe-415c-8b30-ecc03d0281a7',
     content: createTodoItemDto.content,
-    created_at: new Date(),
+    createdAt: new Date(),
   };
   const userId = 'user-id';
   const authenticatedRequest = { jwt: { sub: userId } } as AuthenticatedRequest;
@@ -40,7 +42,7 @@ describe('TodosController', () => {
   });
 
   describe('create()', () => {
-    it('should be pass user ID to the service', async () => {
+    it('should pass user ID to the service', async () => {
       const createTodoMock = (
         todosService.create as jest.Mock
       ).mockResolvedValue(todoItemDto);
@@ -67,7 +69,7 @@ describe('TodosController', () => {
   describe('delete()', () => {
     const todoId = 'todo-id';
 
-    it('should be pass user ID to the service', async () => {
+    it('should pass user ID to the service', async () => {
       const deleteTodoMock = (
         todosService.delete as jest.Mock
       ).mockResolvedValue(undefined);
@@ -83,6 +85,50 @@ describe('TodosController', () => {
 
       await expect(() =>
         todosController.delete(todoId, authenticatedRequest),
+      ).rejects.toThrow(error);
+    });
+  });
+
+  describe('getTodosPage()', () => {
+    const pageOptionsDto: PageOptionsDto = {
+      order: Order.DESC,
+      pageNumber: 1,
+      pageSize: 1,
+      skip: 0,
+    };
+
+    it('should pass user ID to the service', async () => {
+      const todosCount = 5;
+      const todoItemsPage: PageDto<TodoItemDto> = {
+        data: [todoItemDto],
+        metadata: {
+          pageNumber: pageOptionsDto.pageNumber,
+          pageSize: pageOptionsDto.pageSize,
+          itemCount: todosCount,
+          pageCount: Math.ceil(todosCount / pageOptionsDto.pageSize),
+          hasPreviousPage: false,
+          hasNextPage: true,
+        },
+      };
+      const getTodosPageMock = (
+        todosService.getTodosPage as jest.Mock
+      ).mockResolvedValue(todoItemsPage);
+
+      const result = await todosController.getTodosPage(
+        pageOptionsDto,
+        authenticatedRequest,
+      );
+
+      expect(result).toEqual(todoItemsPage);
+      expect(getTodosPageMock).toHaveBeenCalledWith(pageOptionsDto, userId);
+    });
+
+    it('should throw on the service rejection', async () => {
+      const error = new Error('test db error');
+      (todosService.getTodosPage as jest.Mock).mockRejectedValue(error);
+
+      await expect(() =>
+        todosController.getTodosPage(pageOptionsDto, authenticatedRequest),
       ).rejects.toThrow(error);
     });
   });

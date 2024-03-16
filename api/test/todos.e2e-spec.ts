@@ -18,6 +18,7 @@ import { DeleteResult } from 'typeorm/query-builder/result/DeleteResult';
 
 describe('TodosController (e2e)', () => {
   const createTodoEndpoint = '/todos';
+  const getTodosPageEndpoint = '/todos';
   const deleteTodoEndpoint = (id: string) => `/todos/${id}`;
 
   let app: INestApplication;
@@ -67,7 +68,7 @@ describe('TodosController (e2e)', () => {
           const body: TodoItemDto = response.body;
           expect(body.content).toEqual(createTodoItemDto.content);
           expect(body.id).toEqual(id);
-          expect(body.created_at).toEqual(createdAtString);
+          expect(body.createdAt).toEqual(createdAtString);
         });
     });
 
@@ -167,6 +168,133 @@ describe('TodosController (e2e)', () => {
 
       return request(app.getHttpServer())
         .delete(deleteTodoEndpoint(todoId))
+        .set('Authorization', await createAuthorizationHeader(jwtService))
+        .send()
+        .expect(HttpStatus.INTERNAL_SERVER_ERROR)
+        .expect({
+          statusCode: 500,
+          message: 'Internal server error',
+        } satisfies ErrorResponseDto);
+    });
+  });
+
+  describe(`GET ${getTodosPageEndpoint}`, () => {
+    const generateTodoItems = (count: number): TodoItemDto[] => {
+      const todoItems: TodoItemDto[] = [];
+      for (let i = 1; i <= count; i++) {
+        todoItems.push({
+          id: `todoId${i}`,
+          content: `todo ${i}`,
+          createdAt: new Date(),
+        });
+      }
+      return todoItems;
+    };
+
+    test('successful get page with default query parameters', async () => {
+      const foundTodos: TodoItemDto[] = generateTodoItems(10);
+      const todosCount = 15;
+      (todosRepository.findAndCount as jest.Mock).mockResolvedValue([
+        foundTodos,
+        todosCount,
+      ]);
+
+      return request(app.getHttpServer())
+        .get(getTodosPageEndpoint)
+        .set('Authorization', await createAuthorizationHeader(jwtService))
+        .send()
+        .expect(HttpStatus.OK)
+        .expect({
+          data: foundTodos.map((todo) => ({
+            ...todo,
+            createdAt: todo.createdAt.toISOString(),
+          })),
+          metadata: {
+            pageNumber: 1,
+            pageSize: 10,
+            itemCount: todosCount,
+            pageCount: Math.ceil(todosCount / 10),
+            hasPreviousPage: false,
+            hasNextPage: true,
+          },
+        });
+    });
+
+    test('successful get page with custom query parameters', async () => {
+      const pageNumber = 3;
+      const pageSize = 4;
+      const foundTodos: TodoItemDto[] = generateTodoItems(pageSize);
+      const todosCount = 15;
+      (todosRepository.findAndCount as jest.Mock).mockResolvedValue([
+        foundTodos,
+        todosCount,
+      ]);
+
+      return request(app.getHttpServer())
+        .get(
+          `${getTodosPageEndpoint}?order=ASC&pageNumber=${pageNumber}&pageSize=${pageSize}`,
+        )
+        .set('Authorization', await createAuthorizationHeader(jwtService))
+        .send()
+        .expect(HttpStatus.OK)
+        .expect({
+          data: foundTodos.map((todo) => ({
+            ...todo,
+            createdAt: todo.createdAt.toISOString(),
+          })),
+          metadata: {
+            pageNumber: pageNumber,
+            pageSize: pageSize,
+            itemCount: todosCount,
+            pageCount: Math.ceil(todosCount / pageSize),
+            hasPreviousPage: true,
+            hasNextPage: true,
+          },
+        });
+    });
+
+    test('400 bad request with validation errors details', async () => {
+      const wrongOrder = 'WRONG_VALUE';
+      const wrongPageNumber = 0;
+      const wrongPageSize = 50;
+
+      return request(app.getHttpServer())
+        .get(
+          `${getTodosPageEndpoint}?order=${wrongOrder}&pageNumber=${wrongPageNumber}&pageSize=${wrongPageSize}`,
+        )
+        .set('Authorization', await createAuthorizationHeader(jwtService))
+        .send()
+        .expect(HttpStatus.BAD_REQUEST)
+        .expect({
+          statusCode: 400,
+          error: 'Bad Request',
+          message: [
+            'order must be one of the following values: ASC, DESC',
+            'pageNumber must not be less than 1',
+            'pageSize must not be greater than 20',
+          ],
+        } satisfies ErrorResponseDto);
+    });
+
+    it('should return 401 unauthorized on wrong token', () => {
+      return request(app.getHttpServer())
+        .get(getTodosPageEndpoint)
+        .set('Authorization', 'Bearer wrongToken')
+        .send()
+        .expect(HttpStatus.UNAUTHORIZED)
+        .expect({
+          statusCode: 401,
+          message: 'Unauthorized',
+        } satisfies ErrorResponseDto);
+    });
+
+    it('should return 500 internal server error on database error', async () => {
+      (todosRepository.findAndCount as jest.Mock).mockRejectedValue(
+        new Error('test error on findAndCount'),
+      );
+
+      return request(app.getHttpServer())
+        .get(getTodosPageEndpoint)
         .set('Authorization', await createAuthorizationHeader(jwtService))
         .send()
         .expect(HttpStatus.INTERNAL_SERVER_ERROR)

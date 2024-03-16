@@ -8,5 +8,5 @@ export class TodoItemDto {
   content: string;
 
   @ApiProperty({ example: '2024-03-15T16:29:37.616Z' })
-  created_at: Date;
+  createdAt: Date;
 }

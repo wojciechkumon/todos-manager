@@ -12,7 +12,7 @@ export const initTestAppFromModule = async (
 ): Promise<INestApplication> => {
   const app = testingModule.createNestApplication();
   useContainer(app.select(module), { fallbackOnErrors: true });
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   await app.init();
   return app;
 };

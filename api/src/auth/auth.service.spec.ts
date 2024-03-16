@@ -42,15 +42,15 @@ describe('AuthService', () => {
 
     it('should register a new user', async () => {
       const userId = '375ea706-b908-410e-ba0e-d17253ed7f41';
-      const registerSpy = (
+      const registerMock = (
         usersService.register as jest.Mock
       ).mockResolvedValue(userId);
 
       const result = await authService.register(registrationDto);
 
       expect(result?.access_token).toBeDefined();
-      expect(registerSpy).toHaveBeenCalled();
-      const createUserDto: CreateUserDto = registerSpy.mock.calls[0][0];
+      expect(registerMock).toHaveBeenCalled();
+      const createUserDto: CreateUserDto = registerMock.mock.calls[0][0];
       expect(createUserDto.email).toEqual(registrationDto.email);
       expect(
         await bcrypt.compare(

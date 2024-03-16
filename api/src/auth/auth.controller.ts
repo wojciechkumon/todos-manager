@@ -3,26 +3,32 @@ import { AuthService } from './auth.service';
 import { RegistrationDto } from './dto/registration.dto';
 import { JwtDto } from './dto/jwt.dto';
 import { LoginDto } from './dto/login.dto';
-import { ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiInternalServerErrorResponse,
+  ApiOkResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { ErrorResponseDto } from '../dto/error-response.dto';
 
 @Controller('auth')
+@ApiTags('Auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('registration')
   @HttpCode(HttpStatus.CREATED)
-  @ApiResponse({
-    status: HttpStatus.CREATED,
+  @ApiCreatedResponse({
     description: 'The user has been successfully registered.',
     type: JwtDto,
   })
-  @ApiResponse({
-    status: HttpStatus.BAD_REQUEST,
+  @ApiBadRequestResponse({
     description: 'Validation failed/email already exists.',
     type: ErrorResponseDto,
   })
-  @ApiResponse({
+  @ApiInternalServerErrorResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'Internal server error.',
     type: ErrorResponseDto,
@@ -33,22 +39,20 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  @ApiResponse({
-    status: HttpStatus.OK,
+  @ApiOkResponse({
     description: 'The JWT has been successfully generated.',
     type: JwtDto,
   })
-  @ApiResponse({
-    status: HttpStatus.BAD_REQUEST,
+  @ApiBadRequestResponse({
     description: 'Validation failed.',
     type: ErrorResponseDto,
   })
-  @ApiResponse({
+  @ApiUnauthorizedResponse({
     status: HttpStatus.UNAUTHORIZED,
     description: 'Invalid credentials.',
     type: ErrorResponseDto,
   })
-  @ApiResponse({
+  @ApiInternalServerErrorResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'Internal server error.',
     type: ErrorResponseDto,

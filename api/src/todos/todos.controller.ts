@@ -8,15 +8,30 @@ import {
   HttpStatus,
   Delete,
   Param,
+  Get,
+  Query,
 } from '@nestjs/common';
 import { TodosService } from './todos.service';
 import { CreateTodoItemDto } from './dto/create-todo-item.dto';
 import { AuthenticatedRequest, AuthGuard } from '../auth/auth.guard';
-import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiInternalServerErrorResponse,
+  ApiNoContentResponse,
+  ApiNotFoundResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { TodoItemDto } from './dto/todo-item.dto';
 import { ErrorResponseDto } from '../dto/error-response.dto';
+import { PageOptionsDto } from './dto/page-options.dto';
+import { PageDto } from './dto/page.dto';
+import { ApiPaginatedOkResponse } from '../openapi/ApiPaginatedOkResponse';
 
 @Controller('todos')
+@ApiTags('Todos')
 export class TodosController {
   constructor(private readonly todosService: TodosService) {}
 
@@ -24,23 +39,19 @@ export class TodosController {
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
-  @ApiResponse({
-    status: HttpStatus.CREATED,
+  @ApiCreatedResponse({
     description: 'The user has been successfully registered.',
     type: TodoItemDto,
   })
-  @ApiResponse({
-    status: HttpStatus.BAD_REQUEST,
+  @ApiBadRequestResponse({
     description: 'Validation failed.',
     type: ErrorResponseDto,
   })
-  @ApiResponse({
-    status: HttpStatus.UNAUTHORIZED,
+  @ApiUnauthorizedResponse({
     description: 'Unauthorized.',
     type: ErrorResponseDto,
   })
-  @ApiResponse({
-    status: HttpStatus.INTERNAL_SERVER_ERROR,
+  @ApiInternalServerErrorResponse({
     description: 'Internal server error.',
     type: ErrorResponseDto,
   })
@@ -52,26 +63,51 @@ export class TodosController {
     return this.todosService.create(createTodoDto, userId);
   }
 
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiPaginatedOkResponse(TodoItemDto)
+  @ApiBadRequestResponse({
+    description: 'Validation failed.',
+    type: ErrorResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized.',
+    type: ErrorResponseDto,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error.',
+    type: ErrorResponseDto,
+  })
+  getTodosPage(
+    @Query() pageOptionsDto: PageOptionsDto,
+    @Request() req: AuthenticatedRequest,
+  ): Promise<PageDto<TodoItemDto>> {
+    const userId = req.jwt.sub;
+    return this.todosService.getTodosPage(pageOptionsDto, userId);
+  }
+
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
-  @ApiResponse({
+  @ApiNoContentResponse({
     status: HttpStatus.NO_CONTENT,
     description: 'The user has been successfully registered.',
     type: null,
   })
-  @ApiResponse({
+  @ApiUnauthorizedResponse({
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized.',
     type: ErrorResponseDto,
   })
-  @ApiResponse({
+  @ApiNotFoundResponse({
     status: HttpStatus.NOT_FOUND,
     description: 'Not Found.',
     type: ErrorResponseDto,
   })
-  @ApiResponse({
+  @ApiInternalServerErrorResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'Internal server error.',
     type: ErrorResponseDto,

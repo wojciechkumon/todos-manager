@@ -38,19 +38,19 @@ describe('UsersService', () => {
 
     it('should successfully save a new user', async () => {
       const id = '375ea706-b908-410e-ba0e-d17253ed7f41';
-      const insertSpy = (usersRepository.insert as jest.Mock).mockResolvedValue(
-        {
-          identifiers: [{ id }],
-          generatedMaps: [{ id, createdAt: '2024-03-13T21:25:25.216Z' }],
-          raw: [{ id, created_at: '2024-03-13T21:25:25.216Z' }],
-        } satisfies InsertResult,
-      );
+      const insertMock = (
+        usersRepository.insert as jest.Mock
+      ).mockResolvedValue({
+        identifiers: [{ id }],
+        generatedMaps: [{ id, createdAt: '2024-03-13T21:25:25.216Z' }],
+        raw: [{ id, created_at: '2024-03-13T21:25:25.216Z' }],
+      } satisfies InsertResult);
 
       const userId = await usersService.register(createUserDto);
 
       expect(userId).toEqual(id);
-      expect(insertSpy).toHaveBeenCalled();
-      const user: User = insertSpy.mock.calls[0][0];
+      expect(insertMock).toHaveBeenCalled();
+      const user: User = insertMock.mock.calls[0][0];
       expect(user.email).toEqual(createUserDto.email);
       expect(user.passwordHash).toEqual(createUserDto.passwordHash);
     });
@@ -65,26 +65,26 @@ describe('UsersService', () => {
         [],
         driverError,
       );
-      const insertSpy = (usersRepository.insert as jest.Mock).mockRejectedValue(
-        emailAlreadyExistError,
-      );
+      const insertMock = (
+        usersRepository.insert as jest.Mock
+      ).mockRejectedValue(emailAlreadyExistError);
 
       await expect(usersService.register(createUserDto)).rejects.toThrow(
         BadRequestException,
       );
-      expect(insertSpy).toHaveBeenCalled();
+      expect(insertMock).toHaveBeenCalled();
     });
 
     it('should fail on unexpected error', async () => {
       const unexpectedError = new Error('test error');
-      const insertSpy = (usersRepository.insert as jest.Mock).mockRejectedValue(
-        unexpectedError,
-      );
+      const insertMock = (
+        usersRepository.insert as jest.Mock
+      ).mockRejectedValue(unexpectedError);
 
       await expect(usersService.register(createUserDto)).rejects.toThrow(
         InternalServerErrorException,
       );
-      expect(insertSpy).toHaveBeenCalled();
+      expect(insertMock).toHaveBeenCalled();
     });
   });
 

@@ -7,7 +7,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 const setupValidation = (app: INestApplication): void => {
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
 };
 
 const setupOpenApi = (app: INestApplication): void => {

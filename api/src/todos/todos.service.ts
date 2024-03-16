@@ -4,6 +4,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TodoItem } from './entities/todo-item.entity';
 import { TodoItemDto } from './dto/todo-item.dto';
+import { PageOptionsDto } from './dto/page-options.dto';
+import { PageDto } from './dto/page.dto';
+import { PageMetadataDto } from './dto/page-metadata.dto';
 
 @Injectable()
 export class TodosService {
@@ -23,7 +26,7 @@ export class TodosService {
     return {
       id: generatedMap.id,
       content: newTodo.content,
-      created_at: generatedMap.createdAt,
+      createdAt: generatedMap.createdAt,
     };
   }
 
@@ -35,6 +38,21 @@ export class TodosService {
     newTodo.content = createTodoDto.content;
     newTodo.userId = userId;
     return newTodo;
+  }
+
+  async getTodosPage(
+    pageOptionsDto: PageOptionsDto,
+    userId: string,
+  ): Promise<PageDto<TodoItemDto>> {
+    const [foundTodos, todosCount] = await this.todosRepository.findAndCount({
+      where: { userId },
+      order: { createdAt: pageOptionsDto.order },
+      skip: pageOptionsDto.skip,
+      take: pageOptionsDto.pageSize,
+    });
+
+    const pageMetadata = new PageMetadataDto(pageOptionsDto, todosCount);
+    return new PageDto<TodoItemDto>(foundTodos, pageMetadata);
   }
 
   async delete(todoId: string, userId: string): Promise<void> {
