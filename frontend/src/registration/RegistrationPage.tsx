@@ -1,5 +1,6 @@
 import { Button, Link, TextField, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
 import { DottedLayout } from '../common/DottedLayout.tsx';
 import { routes } from '../config/routes.ts';
 
@@ -11,12 +12,15 @@ export const RegistrationPage = () => {
           <div className="rounded bg-stone-700 p-11 pb-8">
             <div className="w-96">
               <Typography variant="h5" className="text-center">
-                Registration
+                <FormattedMessage defaultMessage="Registration" id="qv7ied" />
               </Typography>
               <Typography variant="subtitle2" className="mt-4">
-                Already have an account?{' '}
+                <FormattedMessage
+                  defaultMessage="Already have an account? "
+                  id="gWgSaX"
+                />
                 <Link component={RouterLink} to={routes.login}>
-                  Log in →
+                  <FormattedMessage defaultMessage="Log in →" id="bZk/Lp" />
                 </Link>
               </Typography>
               <div className="py-8">
@@ -37,7 +41,7 @@ export const RegistrationPage = () => {
                 />
               </div>
               <Button variant="contained" className="w-full">
-                Register
+                <FormattedMessage defaultMessage="Register" id="deEeEI" />
               </Button>
             </div>
           </div>

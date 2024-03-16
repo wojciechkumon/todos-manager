@@ -12,7 +12,7 @@ module.exports = {
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
-  plugins: ['react-refresh'],
+  plugins: ['react-refresh', 'formatjs'],
   settings: {
     react: {
       version: 'detect'
@@ -43,6 +43,10 @@ module.exports = {
         argsIgnorePattern: '^_'
       }
     ],
-    'react/react-in-jsx-scope': 'off'
+    'react/react-in-jsx-scope': 'off',
+    "formatjs/enforce-id": [
+      "error",
+      { "idInterpolationPattern": "[sha512:contenthash:base64:6]" }
+    ],
   },
 };

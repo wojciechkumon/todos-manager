@@ -28,3 +28,10 @@ $ npm run build
 ```
 
 See `package.json` for more commands.
+
+
+## Development
+
+### I18n
+Internationalization is done using `react-intl`.
+Currently, it supports English only, but it's ready for more languages.

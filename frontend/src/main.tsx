@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom/client';
 import { App } from './App.tsx';
 import './index.css';
@@ -12,6 +12,7 @@ import {
   ThemeProvider,
 } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
+import { IntlProvider } from 'react-intl';
 
 const rootElement = document.getElementById('root')!;
 
@@ -50,8 +51,10 @@ ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <App />
+        <IntlProvider locale="en" defaultLocale="en" textComponent={Fragment}>
+          <CssBaseline />
+          <App />
+        </IntlProvider>
       </ThemeProvider>
     </StyledEngineProvider>
   </React.StrictMode>,
