@@ -44,6 +44,7 @@ module.exports = {
       }
     ],
     'react/react-in-jsx-scope': 'off',
+    'import/named': 'off',
     "formatjs/enforce-id": [
       "error",
       { "idInterpolationPattern": "[sha512:contenthash:base64:6]" }
