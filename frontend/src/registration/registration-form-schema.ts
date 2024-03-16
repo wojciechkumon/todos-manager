@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const hasLowerCase = (str: string): boolean => str.toUpperCase() != str;
 export const hasUpperCase = (str: string): boolean => str.toLowerCase() != str;
 export const hasSpecialCharacter = (str: string): boolean => {
-  const specialCharacterRegex = /[ `!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/;
+  const specialCharacterRegex = /[ `!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~£§]/;
   return specialCharacterRegex.test(str);
 };
 

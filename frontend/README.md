@@ -27,6 +27,12 @@ $ npm run start:dev
 $ npm run build
 ```
 
+## Test
+
+```bash
+$ npm run test
+```
+
 See `package.json` for more commands.
 
 
