@@ -4,7 +4,13 @@ import { RegistrationForm } from './RegistrationForm.tsx';
 const meta = {
   title: 'registration/RegistrationForm',
   component: RegistrationForm,
-  tags: ['autodocs'],
+  decorators: [
+    (Story) => (
+      <div className="bg-stone-800 p-6">
+        <Story />
+      </div>
+    ),
+  ],
 } satisfies Meta<typeof RegistrationForm>;
 
 export default meta;
