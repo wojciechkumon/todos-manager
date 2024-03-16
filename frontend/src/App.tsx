@@ -1,26 +1,25 @@
-import { useState } from 'react';
-import './App.css';
-import { configuration } from './config/configuration.ts';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { DashboardPage } from './dashboard/DashboardPage.tsx';
+import ErrorPage from './error/ErrorPage.tsx';
+import { RegistrationPage } from './registration/RegistrationPage.tsx';
+import { LoginPage } from './login/LoginPage.tsx';
 
-function App() {
-  const [count, setCount] = useState(0);
-  console.log('configuration', configuration);
-  return (
-    <>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  );
-}
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <DashboardPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: '/login',
+    element: <LoginPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: '/register',
+    element: <RegistrationPage />,
+    errorElement: <ErrorPage />,
+  },
+]);
 
-export default App;
+export const App = () => <RouterProvider router={router} />;
