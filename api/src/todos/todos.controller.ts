@@ -25,10 +25,10 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { TodoItemDto } from './dto/todo-item.dto';
-import { ErrorResponseDto } from '../dto/error-response.dto';
+import { ErrorResponseDto } from '../common/dto/error-response.dto';
 import { PageOptionsDto } from './dto/page-options.dto';
 import { PageDto } from './dto/page.dto';
-import { ApiPaginatedOkResponse } from '../openapi/ApiPaginatedOkResponse';
+import { ApiPaginatedOkResponse } from '../common/openapi/ApiPaginatedOkResponse';
 
 @Controller('todos')
 @ApiTags('Todos')

@@ -13,7 +13,7 @@ import { TodosModule } from '../src/todos/todos.module';
 import { createMock } from '@golevelup/ts-jest';
 import { TodoItemDto } from '../src/todos/dto/todo-item.dto';
 import { AuthModule } from '../src/auth/auth.module';
-import { ErrorResponseDto } from '../src/dto/error-response.dto';
+import { ErrorResponseDto } from '../src/common/dto/error-response.dto';
 import { DeleteResult } from 'typeorm/query-builder/result/DeleteResult';
 
 describe('TodosController (e2e)', () => {

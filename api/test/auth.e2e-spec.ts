@@ -14,7 +14,7 @@ import { LoginDto } from '../src/auth/dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { SALT_OR_ROUNDS } from '../src/auth/auth.service';
-import { ErrorResponseDto } from '../src/dto/error-response.dto';
+import { ErrorResponseDto } from '../src/common/dto/error-response.dto';
 
 describe('AuthController (e2e)', () => {
   const registrationEndpoint = '/auth/registration';

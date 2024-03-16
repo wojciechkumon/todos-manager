@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
@@ -7,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { configuration } from './config/configuration';
 import { TodosModule } from './todos/todos.module';
 import { getTypeOrmConfig } from './config/typeorm';
+import { StatusModule } from './status/status.module';
 
 @Module({
   imports: [
@@ -18,7 +18,7 @@ import { getTypeOrmConfig } from './config/typeorm';
     UsersModule,
     AuthModule,
     TodosModule,
+    StatusModule,
   ],
-  controllers: [AppController],
 })
 export class AppModule {}
