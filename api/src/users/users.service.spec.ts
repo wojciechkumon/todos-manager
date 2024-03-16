@@ -76,7 +76,7 @@ describe('UsersService', () => {
     });
 
     it('should fail on unexpected error', async () => {
-      const unexpectedError = new Error('unexpected error');
+      const unexpectedError = new Error('test error');
       const insertSpy = (usersRepository.insert as jest.Mock).mockRejectedValue(
         unexpectedError,
       );

@@ -95,7 +95,7 @@ describe('TodosController (e2e)', () => {
 
     it('should return 500 internal server error on database error', async () => {
       (todosRepository.insert as jest.Mock).mockRejectedValue(
-        new Error('unexpected'),
+        new Error('test error'),
       );
 
       return request(app.getHttpServer())

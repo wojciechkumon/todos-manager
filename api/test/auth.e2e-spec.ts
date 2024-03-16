@@ -14,6 +14,7 @@ import { LoginDto } from '../src/auth/dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { SALT_OR_ROUNDS } from '../src/auth/auth.service';
+import { ErrorResponseDto } from '../src/dto/error-response.dto';
 
 describe('AuthController (e2e)', () => {
   const registrationEndpoint = '/auth/registration';
@@ -70,17 +71,16 @@ describe('AuthController (e2e)', () => {
         email: 'itIsNotAnEmail',
         password: 'passworD!',
       };
-      const expectedResponse = {
-        error: 'Bad Request',
-        message: ['email must be an email'],
-        statusCode: 400,
-      };
 
       return request(app.getHttpServer())
         .post(registrationEndpoint)
         .send(registrationDto)
         .expect(HttpStatus.BAD_REQUEST)
-        .expect(expectedResponse);
+        .expect({
+          error: 'Bad Request',
+          message: ['email must be an email'],
+          statusCode: 400,
+        } satisfies ErrorResponseDto);
     });
 
     test('error: email already exists', () => {
@@ -94,17 +94,16 @@ describe('AuthController (e2e)', () => {
         email: user.email,
         password: 'passworD!',
       };
-      const expectedResponse = {
-        error: 'Bad Request',
-        message: ['email already exists'],
-        statusCode: 400,
-      };
 
       return request(app.getHttpServer())
         .post(registrationEndpoint)
         .send(registrationDto)
         .expect(HttpStatus.BAD_REQUEST)
-        .expect(expectedResponse);
+        .expect({
+          error: 'Bad Request',
+          message: ['email already exists'],
+          statusCode: 400,
+        } satisfies ErrorResponseDto);
     });
 
     test('error: weak password', () => {
@@ -113,17 +112,35 @@ describe('AuthController (e2e)', () => {
         email: 'email@email.com',
         password: 'pass',
       };
-      const expectedResponse = {
-        error: 'Bad Request',
-        message: ['password is not strong enough'],
-        statusCode: 400,
-      };
 
       return request(app.getHttpServer())
         .post(registrationEndpoint)
         .send(registrationDto)
         .expect(HttpStatus.BAD_REQUEST)
-        .expect(expectedResponse);
+        .expect({
+          error: 'Bad Request',
+          message: ['password is not strong enough'],
+          statusCode: 400,
+        } satisfies ErrorResponseDto);
+    });
+
+    test('error: internal server error', () => {
+      (usersRepository.findOneBy as jest.Mock).mockRejectedValue(
+        new Error('test error'),
+      );
+      const registrationDto: RegistrationDto = {
+        email: 'email@email.com',
+        password: 'passworD!',
+      };
+
+      return request(app.getHttpServer())
+        .post(registrationEndpoint)
+        .send(registrationDto)
+        .expect(HttpStatus.INTERNAL_SERVER_ERROR)
+        .expect({
+          statusCode: 500,
+          message: 'Internal server error',
+        } satisfies ErrorResponseDto);
     });
   });
 
@@ -172,7 +189,12 @@ describe('AuthController (e2e)', () => {
       return request(app.getHttpServer())
         .post(loginEndpoint)
         .send(loginDto)
-        .expect(HttpStatus.UNAUTHORIZED);
+        .expect(HttpStatus.UNAUTHORIZED)
+        .expect({
+          statusCode: 401,
+          error: 'Unauthorized',
+          message: 'Invalid email or password',
+        } satisfies ErrorResponseDto);
     });
 
     test('login failed on empty password', async () => {
@@ -185,7 +207,15 @@ describe('AuthController (e2e)', () => {
       return request(app.getHttpServer())
         .post(loginEndpoint)
         .send(loginDto)
-        .expect(HttpStatus.BAD_REQUEST);
+        .expect(HttpStatus.BAD_REQUEST)
+        .expect({
+          statusCode: 400,
+          error: 'Bad Request',
+          message: [
+            'password must be shorter than or equal to 250 characters',
+            'password should not be empty',
+          ],
+        } satisfies ErrorResponseDto);
     });
 
     test('login failed on no email', async () => {
@@ -196,7 +226,34 @@ describe('AuthController (e2e)', () => {
       return request(app.getHttpServer())
         .post(loginEndpoint)
         .send(loginDto)
-        .expect(HttpStatus.BAD_REQUEST);
+        .expect(HttpStatus.BAD_REQUEST)
+        .expect({
+          statusCode: 400,
+          error: 'Bad Request',
+          message: [
+            'email must be shorter than or equal to 254 characters',
+            'email must be an email',
+          ],
+        } satisfies ErrorResponseDto);
+    });
+
+    test('login failed on internal server error', async () => {
+      const loginDto: LoginDto = {
+        email: 'test@email.com',
+        password: 'passworD!',
+      };
+      (usersRepository.findOneBy as jest.Mock).mockRejectedValue(
+        new Error('test error'),
+      );
+
+      return request(app.getHttpServer())
+        .post(loginEndpoint)
+        .send(loginDto)
+        .expect(HttpStatus.INTERNAL_SERVER_ERROR)
+        .expect({
+          statusCode: 500,
+          message: 'Internal server error',
+        } satisfies ErrorResponseDto);
     });
   });
 });
