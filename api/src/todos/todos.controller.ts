@@ -6,6 +6,8 @@ import {
   Request,
   HttpCode,
   HttpStatus,
+  Delete,
+  Param,
 } from '@nestjs/common';
 import { TodosService } from './todos.service';
 import { CreateTodoItemDto } from './dto/create-todo-item.dto';
@@ -48,5 +50,37 @@ export class TodosController {
   ): Promise<TodoItemDto> {
     const userId = req.jwt.sub;
     return this.todosService.create(createTodoDto, userId);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: 'The user has been successfully registered.',
+    type: null,
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized.',
+    type: ErrorResponseDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Not Found.',
+    type: ErrorResponseDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Internal server error.',
+    type: ErrorResponseDto,
+  })
+  delete(
+    @Param('id') id: string,
+    @Request() req: AuthenticatedRequest,
+  ): Promise<void> {
+    const userId = req.jwt.sub;
+    return this.todosService.delete(id, userId);
   }
 }

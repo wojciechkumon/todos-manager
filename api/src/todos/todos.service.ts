@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTodoItemDto } from './dto/create-todo-item.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -35,5 +35,15 @@ export class TodosService {
     newTodo.content = createTodoDto.content;
     newTodo.userId = userId;
     return newTodo;
+  }
+
+  async delete(todoId: string, userId: string): Promise<void> {
+    const { affected } = await this.todosRepository.delete({
+      id: todoId,
+      userId,
+    });
+    if (!affected) {
+      throw new NotFoundException('Todo item not found');
+    }
   }
 }

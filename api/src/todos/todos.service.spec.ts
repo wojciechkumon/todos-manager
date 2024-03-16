@@ -7,7 +7,11 @@ import { TodoItemDto } from './dto/todo-item.dto';
 import { TodoItem } from './entities/todo-item.entity';
 import { CreateTodoItemDto } from './dto/create-todo-item.dto';
 import { InsertResult } from 'typeorm/query-builder/result/InsertResult';
-import { InternalServerErrorException } from '@nestjs/common';
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
+import { DeleteResult } from 'typeorm/query-builder/result/DeleteResult';
 
 describe('TodosService', () => {
   let todosService: TodosService;
@@ -60,13 +64,49 @@ describe('TodosService', () => {
       expect(insertArgument.content).toEqual(createTodoItemDto.content);
     });
 
-    it('should forward an error from the service', async () => {
+    it('should forward an error from the repository', async () => {
       const error = new InternalServerErrorException();
       (todosRepository.insert as jest.Mock).mockRejectedValue(error);
 
       await expect(() =>
         todosService.create(createTodoItemDto, userId),
       ).rejects.toThrow(error);
+    });
+  });
+
+  describe('delete()', () => {
+    const todoId = 'todoId';
+    const userId = 'userId';
+
+    it('should delete an existing todo item', async () => {
+      const deleteSpy = (todosRepository.delete as jest.Mock).mockResolvedValue(
+        { raw: [], affected: 1 } satisfies DeleteResult,
+      );
+
+      await todosService.delete(todoId, userId);
+
+      expect(deleteSpy).toHaveBeenCalledWith({ id: todoId, userId });
+    });
+
+    it('should not delete anything when todo item not found', async () => {
+      const deleteSpy = (todosRepository.delete as jest.Mock).mockResolvedValue(
+        { raw: [], affected: 0 } satisfies DeleteResult,
+      );
+
+      await expect(() => todosService.delete(todoId, userId)).rejects.toThrow(
+        new NotFoundException('Todo item not found'),
+      );
+
+      expect(deleteSpy).toHaveBeenCalledWith({ id: todoId, userId });
+    });
+
+    it('should forward an error from the repository', async () => {
+      const error = new Error('db error');
+      (todosRepository.delete as jest.Mock).mockRejectedValue(error);
+
+      await expect(() => todosService.delete(todoId, userId)).rejects.toThrow(
+        error,
+      );
     });
   });
 });

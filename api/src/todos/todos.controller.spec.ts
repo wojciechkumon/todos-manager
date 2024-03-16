@@ -5,7 +5,10 @@ import { createMock } from '@golevelup/ts-jest';
 import { TodoItemDto } from './dto/todo-item.dto';
 import { CreateTodoItemDto } from './dto/create-todo-item.dto';
 import { AuthenticatedRequest, AuthGuard } from '../auth/auth.guard';
-import { InternalServerErrorException } from '@nestjs/common';
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 
 describe('TodosController', () => {
   let todosController: TodosController;
@@ -57,6 +60,29 @@ describe('TodosController', () => {
 
       await expect(() =>
         todosController.create(createTodoItemDto, authenticatedRequest),
+      ).rejects.toThrow(error);
+    });
+  });
+
+  describe('delete()', () => {
+    const todoId = 'todo-id';
+
+    it('should be pass user ID to the service', async () => {
+      const deleteTodoMock = (
+        todosService.delete as jest.Mock
+      ).mockResolvedValue(undefined);
+
+      await todosController.delete(todoId, authenticatedRequest);
+
+      expect(deleteTodoMock).toHaveBeenCalledWith(todoId, userId);
+    });
+
+    it('should throw on the service rejection', async () => {
+      const error = new NotFoundException();
+      (todosService.delete as jest.Mock).mockRejectedValue(error);
+
+      await expect(() =>
+        todosController.delete(todoId, authenticatedRequest),
       ).rejects.toThrow(error);
     });
   });

@@ -14,9 +14,12 @@ import { createMock } from '@golevelup/ts-jest';
 import { TodoItemDto } from '../src/todos/dto/todo-item.dto';
 import { AuthModule } from '../src/auth/auth.module';
 import { ErrorResponseDto } from '../src/dto/error-response.dto';
+import { DeleteResult } from 'typeorm/query-builder/result/DeleteResult';
 
 describe('TodosController (e2e)', () => {
   const createTodoEndpoint = '/todos';
+  const deleteTodoEndpoint = (id: string) => `/todos/${id}`;
+
   let app: INestApplication;
   let todosRepository: Repository<TodoItem>;
   let jwtService: JwtService;
@@ -102,6 +105,70 @@ describe('TodosController (e2e)', () => {
         .post(createTodoEndpoint)
         .set('Authorization', await createAuthorizationHeader(jwtService))
         .send(createTodoItemDto)
+        .expect(HttpStatus.INTERNAL_SERVER_ERROR)
+        .expect({
+          statusCode: 500,
+          message: 'Internal server error',
+        } satisfies ErrorResponseDto);
+    });
+  });
+
+  describe(`DELETE ${deleteTodoEndpoint(':id')}`, () => {
+    const todoId = '2075e374-79e7-405e-8a92-f80df765943e';
+
+    test('successful todo item deletion', async () => {
+      (todosRepository.delete as jest.Mock).mockResolvedValue({
+        raw: [],
+        affected: 1,
+      } satisfies DeleteResult);
+
+      return request(app.getHttpServer())
+        .delete(deleteTodoEndpoint(todoId))
+        .set('Authorization', await createAuthorizationHeader(jwtService))
+        .send()
+        .expect(HttpStatus.NO_CONTENT)
+        .expect({});
+    });
+
+    test('todo item to delete not found/owned by someone else', async () => {
+      (todosRepository.delete as jest.Mock).mockResolvedValue({
+        raw: [],
+        affected: 0,
+      } satisfies DeleteResult);
+
+      return request(app.getHttpServer())
+        .delete(deleteTodoEndpoint(todoId))
+        .set('Authorization', await createAuthorizationHeader(jwtService))
+        .send()
+        .expect(HttpStatus.NOT_FOUND)
+        .expect({
+          message: 'Todo item not found',
+          error: 'Not Found',
+          statusCode: 404,
+        } satisfies ErrorResponseDto);
+    });
+
+    test('should return 401 unauthorized on wrong token', async () => {
+      return request(app.getHttpServer())
+        .delete(deleteTodoEndpoint(todoId))
+        .set('Authorization', 'Bearer wrongToken')
+        .send()
+        .expect(HttpStatus.UNAUTHORIZED)
+        .expect({
+          statusCode: 401,
+          message: 'Unauthorized',
+        } satisfies ErrorResponseDto);
+    });
+
+    it('should return 500 internal server error on database error', async () => {
+      (todosRepository.delete as jest.Mock).mockRejectedValue(
+        new Error('test error on delete'),
+      );
+
+      return request(app.getHttpServer())
+        .delete(deleteTodoEndpoint(todoId))
+        .set('Authorization', await createAuthorizationHeader(jwtService))
+        .send()
         .expect(HttpStatus.INTERNAL_SERVER_ERROR)
         .expect({
           statusCode: 500,
