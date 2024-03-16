@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
-import { AuthGuard } from './auth/auth.guard';
-import { createMock } from '@golevelup/ts-jest';
+import { StatusDto } from './dto/Status.dto';
 
 describe('AppController', () => {
   let appController: AppController;
@@ -9,19 +8,16 @@ describe('AppController', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
-    })
-      .overrideGuard(AuthGuard)
-      .useValue(createMock<AuthGuard>())
-      .compile();
+    }).compile();
 
     appController = app.get<AppController>(AppController);
-    const authGuard = app.get<AuthGuard>(AuthGuard);
-    (authGuard.canActivate as jest.Mock).mockResolvedValue(true);
   });
 
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toEqual({ status: 'OK' });
+  describe('status endpoint', () => {
+    it('should return status OK', () => {
+      expect(appController.getStatus()).toEqual({
+        status: 'OK',
+      } satisfies StatusDto);
     });
   });
 });

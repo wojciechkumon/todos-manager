@@ -1,26 +1,17 @@
-import {
-  Controller,
-  Get,
-  UseGuards,
-  Request,
-  HttpCode,
-  HttpStatus,
-} from '@nestjs/common';
-import { AuthenticatedRequest, AuthGuard } from './auth/auth.guard';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
+import { ApiResponse } from '@nestjs/swagger';
+import { StatusDto } from './dto/Status.dto';
 
 @Controller()
 export class AppController {
   @Get('status')
   @HttpCode(HttpStatus.OK)
-  getHello(): { status: 'OK' } {
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'The server is running',
+    type: StatusDto,
+  })
+  getStatus(): StatusDto {
     return { status: 'OK' };
-  }
-
-  @UseGuards(AuthGuard)
-  @ApiBearerAuth()
-  @Get('protected')
-  getProtectedHello(@Request() req: AuthenticatedRequest): string {
-    return `Hello ${req.jwt.email}!`;
   }
 }
