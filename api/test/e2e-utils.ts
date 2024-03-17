@@ -1,5 +1,9 @@
 import { useContainer } from 'class-validator';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import {
+  BadRequestException,
+  INestApplication,
+  ValidationPipe,
+} from '@nestjs/common';
 import { TestingModule } from '@nestjs/testing';
 import { Type } from '@nestjs/common/interfaces/type.interface';
 import { DynamicModule } from '@nestjs/common/interfaces/modules';
@@ -12,7 +16,12 @@ export const initTestAppFromModule = async (
 ): Promise<INestApplication> => {
   const app = testingModule.createNestApplication();
   useContainer(app.select(module), { fallbackOnErrors: true });
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      exceptionFactory: (errors) => new BadRequestException(errors),
+    }),
+  );
   await app.init();
   return app;
 };

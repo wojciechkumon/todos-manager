@@ -76,11 +76,21 @@ describe('AuthController (e2e)', () => {
         .post(registrationEndpoint)
         .send(registrationDto)
         .expect(HttpStatus.BAD_REQUEST)
-        .expect({
-          error: 'Bad Request',
-          message: ['email must be an email'],
-          statusCode: 400,
-        } satisfies ErrorResponseDto);
+        .then((response) => {
+          expect(response.body).toEqual({
+            statusCode: 400,
+            error: 'Bad Request',
+            message: [
+              {
+                property: 'email',
+                value: registrationDto.email,
+                constraints: { isEmail: 'email must be an email' },
+                target: { ...registrationDto },
+                children: [],
+              },
+            ],
+          } satisfies ErrorResponseDto);
+        });
     });
 
     test('error: email already exists', () => {
@@ -99,11 +109,21 @@ describe('AuthController (e2e)', () => {
         .post(registrationEndpoint)
         .send(registrationDto)
         .expect(HttpStatus.BAD_REQUEST)
-        .expect({
-          error: 'Bad Request',
-          message: ['email already exists'],
-          statusCode: 400,
-        } satisfies ErrorResponseDto);
+        .then((response) => {
+          expect(response.body).toEqual({
+            statusCode: 400,
+            error: 'Bad Request',
+            message: [
+              {
+                property: 'email',
+                value: registrationDto.email,
+                constraints: { isEmailUnique: 'email already exists' },
+                target: { ...registrationDto },
+                children: [],
+              },
+            ],
+          } satisfies ErrorResponseDto);
+        });
     });
 
     test('error: weak password', () => {
@@ -117,11 +137,23 @@ describe('AuthController (e2e)', () => {
         .post(registrationEndpoint)
         .send(registrationDto)
         .expect(HttpStatus.BAD_REQUEST)
-        .expect({
-          error: 'Bad Request',
-          message: ['password is not strong enough'],
-          statusCode: 400,
-        } satisfies ErrorResponseDto);
+        .then((response) => {
+          expect(response.body).toEqual({
+            statusCode: 400,
+            error: 'Bad Request',
+            message: [
+              {
+                property: 'password',
+                value: registrationDto.password,
+                constraints: {
+                  isStrongPassword: 'password is not strong enough',
+                },
+                target: { ...registrationDto },
+                children: [],
+              },
+            ],
+          } satisfies ErrorResponseDto);
+        });
     });
 
     test('error: internal server error', () => {
@@ -208,14 +240,24 @@ describe('AuthController (e2e)', () => {
         .post(loginEndpoint)
         .send(loginDto)
         .expect(HttpStatus.BAD_REQUEST)
-        .expect({
-          statusCode: 400,
-          error: 'Bad Request',
-          message: [
-            'password must be shorter than or equal to 250 characters',
-            'password should not be empty',
-          ],
-        } satisfies ErrorResponseDto);
+        .then((response) => {
+          expect(response.body).toEqual({
+            statusCode: 400,
+            error: 'Bad Request',
+            message: [
+              {
+                property: 'password',
+                constraints: {
+                  isNotEmpty: 'password should not be empty',
+                  maxLength:
+                    'password must be shorter than or equal to 250 characters',
+                },
+                target: { ...loginDto },
+                children: [],
+              },
+            ],
+          } satisfies ErrorResponseDto);
+        });
     });
 
     test('login failed on no email', async () => {
@@ -227,14 +269,24 @@ describe('AuthController (e2e)', () => {
         .post(loginEndpoint)
         .send(loginDto)
         .expect(HttpStatus.BAD_REQUEST)
-        .expect({
-          statusCode: 400,
-          error: 'Bad Request',
-          message: [
-            'email must be shorter than or equal to 254 characters',
-            'email must be an email',
-          ],
-        } satisfies ErrorResponseDto);
+        .then((response) => {
+          expect(response.body).toEqual({
+            statusCode: 400,
+            error: 'Bad Request',
+            message: [
+              {
+                property: 'email',
+                constraints: {
+                  isEmail: 'email must be an email',
+                  maxLength:
+                    'email must be shorter than or equal to 254 characters',
+                },
+                target: { ...loginDto },
+                children: [],
+              },
+            ],
+          } satisfies ErrorResponseDto);
+        });
     });
 
     test('login failed on internal server error', async () => {

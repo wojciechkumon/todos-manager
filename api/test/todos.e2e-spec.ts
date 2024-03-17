@@ -81,7 +81,15 @@ describe('TodosController (e2e)', () => {
         .expect({
           statusCode: 400,
           error: 'Bad Request',
-          message: ['content should not be empty'],
+          message: [
+            {
+              property: 'content',
+              value: '',
+              constraints: { isNotEmpty: 'content should not be empty' },
+              target: { content: '' },
+              children: [],
+            },
+          ],
         } satisfies ErrorResponseDto);
     });
 
@@ -265,15 +273,50 @@ describe('TodosController (e2e)', () => {
         .set('Authorization', await createAuthorizationHeader(jwtService))
         .send()
         .expect(HttpStatus.BAD_REQUEST)
-        .expect({
-          statusCode: 400,
-          error: 'Bad Request',
-          message: [
-            'order must be one of the following values: ASC, DESC',
-            'pageNumber must not be less than 1',
-            'pageSize must not be greater than 20',
-          ],
-        } satisfies ErrorResponseDto);
+        .then((response) => {
+          expect(response.body).toEqual({
+            statusCode: 400,
+            error: 'Bad Request',
+            message: [
+              {
+                property: 'order',
+                value: wrongOrder,
+                constraints: {
+                  isEnum:
+                    'order must be one of the following values: ASC, DESC',
+                },
+                target: {
+                  order: wrongOrder,
+                  pageNumber: wrongPageNumber,
+                  pageSize: wrongPageSize,
+                },
+                children: [],
+              },
+              {
+                property: 'pageNumber',
+                value: wrongPageNumber,
+                constraints: { min: 'pageNumber must not be less than 1' },
+                target: {
+                  order: wrongOrder,
+                  pageNumber: wrongPageNumber,
+                  pageSize: wrongPageSize,
+                },
+                children: [],
+              },
+              {
+                property: 'pageSize',
+                value: wrongPageSize,
+                constraints: { max: 'pageSize must not be greater than 20' },
+                target: {
+                  order: wrongOrder,
+                  pageNumber: wrongPageNumber,
+                  pageSize: wrongPageSize,
+                },
+                children: [],
+              },
+            ],
+          } satisfies ErrorResponseDto);
+        });
     });
 
     it('should return 401 unauthorized on wrong token', () => {

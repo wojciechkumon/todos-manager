@@ -1,5 +1,10 @@
 import { NestFactory } from '@nestjs/core';
-import { INestApplication, Logger, ValidationPipe } from '@nestjs/common';
+import {
+  BadRequestException,
+  INestApplication,
+  Logger,
+  ValidationPipe,
+} from '@nestjs/common';
 import { AppModule } from './app.module';
 import { useContainer } from 'class-validator';
 import { configuration } from './config/configuration';
@@ -7,7 +12,12 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 const setupValidation = (app: INestApplication): void => {
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      exceptionFactory: (errors) => new BadRequestException(errors),
+    }),
+  );
 };
 
 const setupOpenApi = (app: INestApplication): void => {
@@ -23,6 +33,7 @@ const setupOpenApi = (app: INestApplication): void => {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
   setupValidation(app);
   setupOpenApi(app);
 
