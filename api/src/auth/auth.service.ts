@@ -39,9 +39,7 @@ export class AuthService {
       sub: userId,
       email: registrationDto.email,
     };
-    return {
-      access_token: await this.jwtService.signAsync(jwtPayload),
-    };
+    return this.createJwtResponse(jwtPayload);
   }
 
   async login(loginDto: LoginDto): Promise<JwtDto> {
@@ -62,8 +60,16 @@ export class AuthService {
       sub: user.id,
       email: user.email,
     };
+    return this.createJwtResponse(jwtPayload);
+  }
+
+  private async createJwtResponse(jwtPayload: JwtPayload): Promise<JwtDto> {
+    const jwt = await this.jwtService.signAsync(jwtPayload);
+    const decodedJwt = this.jwtService.decode(jwt);
     return {
-      access_token: await this.jwtService.signAsync(jwtPayload),
+      token_type: 'Bearer',
+      access_token: jwt,
+      expires: decodedJwt.exp,
     };
   }
 }

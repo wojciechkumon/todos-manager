@@ -8,6 +8,11 @@ import { RegistrationDto } from './dto/registration.dto';
 import { LoginDto } from './dto/login.dto';
 
 describe('AuthController', () => {
+  const jwtDto: JwtDto = {
+    access_token: 'JWT',
+    token_type: 'Bearer',
+    expires: 1711270023,
+  };
   let authController: AuthController;
   let authService: AuthService;
 
@@ -30,12 +35,11 @@ describe('AuthController', () => {
     };
 
     it('should register a user', async () => {
-      const serviceResponse: JwtDto = { access_token: 'JWT' };
-      (authService.register as jest.Mock).mockResolvedValue(serviceResponse);
+      (authService.register as jest.Mock).mockResolvedValue(jwtDto);
 
       const response = await authController.register(registrationDto);
 
-      expect(response).toEqual(serviceResponse);
+      expect(response).toEqual(jwtDto);
     });
 
     it('should throw on the service rejection', async () => {
@@ -55,12 +59,11 @@ describe('AuthController', () => {
     };
 
     it('should login a user', async () => {
-      const serviceResponse: JwtDto = { access_token: 'JWT' };
-      (authService.login as jest.Mock).mockResolvedValue(serviceResponse);
+      (authService.login as jest.Mock).mockResolvedValue(jwtDto);
 
       const response = await authController.login(loginDto);
 
-      expect(response).toEqual(serviceResponse);
+      expect(response).toEqual(jwtDto);
     });
 
     it('should throw an error on invalid credentials', async () => {
