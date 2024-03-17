@@ -5,13 +5,13 @@ export class ErrorResponseDto {
   statusCode: number;
 
   @ApiProperty({ example: 'Unauthorized' })
-  message: string | ValidationErrorMessages[];
+  message: string | ValidationError[];
 
   @ApiProperty({ example: 'Bad Request' })
   error?: string;
 }
 
-export class ValidationErrorMessages {
+export class ValidationError {
   @ApiProperty({ example: 'email' })
   property: string;
 

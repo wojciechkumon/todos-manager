@@ -1,7 +1,7 @@
 import { removeJwt, saveJwt } from './auth-holder.ts';
 import { routes } from '../config/routes.ts';
 import { NavigateFunction } from 'react-router';
-import { JwtResponse } from '../api/registration.ts';
+import { JwtResponse } from '../api/JwtResponse.ts';
 
 export const loginWithJwt = (
   jwtResponse: JwtResponse,

@@ -4,15 +4,15 @@ import { AxiosResponse } from 'axios';
 import { ErrorResponse } from './error-response.ts';
 import { JwtResponse } from './JwtResponse.ts';
 
-export interface RegistrationDto {
+export interface LoginDto {
   email: string;
   password: string;
 }
 
-export const register = (
+export const login = (
   email: string,
   password: string,
 ): Promise<AxiosResponse<JwtResponse | ErrorResponse>> => {
-  const registrationDto: RegistrationDto = { email, password };
-  return getAxios().post<JwtResponse>(apiUrls.auth.register, registrationDto);
+  const loginDto: LoginDto = { email, password };
+  return getAxios().post<JwtResponse>(apiUrls.auth.login, loginDto);
 };

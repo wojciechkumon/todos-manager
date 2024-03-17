@@ -1,10 +1,10 @@
 export interface ErrorResponse {
   statusCode: number;
-  message: string | ValidationErrorMessages[];
+  message: string | ValidationError[];
   error?: string;
 }
 
-export interface ValidationErrorMessages {
+export interface ValidationError {
   property: string;
   value?: string | number;
   constraints: Record<string, string>;
