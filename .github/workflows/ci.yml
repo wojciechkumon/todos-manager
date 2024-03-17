@@ -1,0 +1,37 @@
+name: CI
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+      - name: Setup Nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.19.1'
+      - name: API - npm ci (install dependencies)
+        run: npm --prefix api ci
+      - name: API - lint
+        run: npm --prefix api run lint
+      - name: API - tests
+        run: npm --prefix api run test
+      - name: API - E2E tests
+        run: npm --prefix api run test:e2e
+      - name: API - build
+        run: npm --prefix api run build
+
+      - name: Frontend - npm ci (install dependencies)
+        run: npm --prefix frontend ci
+      - name: Frontend - lint
+        run: npm --prefix frontend run lint
+      - name: Frontend - tests
+        run: npm --prefix frontend run test
+      - name: Frontend - build
+        run: npm --prefix frontend run build
+      - name: Frontend - build storybook
+        run: npm --prefix frontend run build-storybook
