@@ -1,7 +1,7 @@
 import { AxiosResponse, HttpStatusCode } from 'axios';
 import { Link, Typography } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -12,7 +12,6 @@ import {
 } from 'react-hook-form';
 import { routes } from '../config/routes.ts';
 import { RHFInputField } from '../common/form/RHFInputField.tsx';
-import { loginWithJwt } from '../auth/login-with-jwt.ts';
 import { ErrorResponse, ValidationError } from '../api/error-response.ts';
 import { useState } from 'react';
 import { snackbarMessages } from '../common/snackbar/snackbar-messages.ts';
@@ -25,10 +24,11 @@ import {
 import { JwtResponse } from '../api/JwtResponse.ts';
 import { login } from '../api/login.ts';
 import { propagateBackendErrors } from '../common/form/propagate-backend-errors.ts';
+import { useLogin } from '../auth/hooks/useLogin.ts';
 
 export const LoginForm = () => {
   const intl = useIntl();
-  const navigate = useNavigate();
+  const loginToDashboard = useLogin();
   const formMethods = useForm<LoginFormSchema>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: defaultFormValues,
@@ -50,7 +50,7 @@ export const LoginForm = () => {
     }
 
     if (response.status === HttpStatusCode.Ok) {
-      loginWithJwt(response.data as JwtResponse, navigate);
+      loginToDashboard(response.data as JwtResponse);
       return;
     }
     if (response.status === HttpStatusCode.Unauthorized) {
@@ -92,6 +92,7 @@ export const LoginForm = () => {
               id: 'sy+pv5',
             })}
             inputProps={{
+              autoComplete: 'email',
               variant: 'outlined',
               className: 'w-full mb-4',
               required: true,
@@ -105,6 +106,7 @@ export const LoginForm = () => {
             })}
             inputProps={{
               type: 'password',
+              autoComplete: 'current-password',
               variant: 'outlined',
               className: 'w-full',
               required: true,

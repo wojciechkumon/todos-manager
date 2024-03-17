@@ -1,9 +1,18 @@
-import { getJwt, JwtPayload, removeJwt, saveJwt } from './auth-holder.ts';
+import {
+  getJwt,
+  getJwtAsAuthorizationHeader,
+  JwtPayload,
+  removeJwt,
+  saveJwt,
+} from './auth-holder.ts';
 import * as jwtDecodeModule from 'jwt-decode';
 
 describe('auth-holder', () => {
+  const jwtString = 'JWT';
+
   beforeEach(() => {
     jest.resetAllMocks();
+    localStorage.clear();
   });
 
   const createJwtPayload = (expiresAt: number): JwtPayload => ({
@@ -20,8 +29,28 @@ describe('auth-holder', () => {
       .spyOn(jwtDecodeModule, 'jwtDecode')
       .mockReturnValue(createJwtPayload(minuteLater));
 
-    saveJwt('JWT');
-    expect(getJwt()).toEqual(createJwtPayload(minuteLater));
+    saveJwt(jwtString);
+    const jwtPayload = getJwt();
+
+    expect(jwtPayload).toEqual(createJwtPayload(minuteLater));
+  });
+
+  it('should retrieve saved JWT as Authorization header', () => {
+    const nowInSeconds = Date.now() / 1_000;
+    const minuteLater = nowInSeconds + 60;
+    jest
+      .spyOn(jwtDecodeModule, 'jwtDecode')
+      .mockReturnValue(createJwtPayload(minuteLater));
+
+    saveJwt(jwtString);
+    const authorizationHeader = getJwtAsAuthorizationHeader();
+
+    expect(authorizationHeader).toEqual(`Bearer ${jwtString}`);
+  });
+
+  it('should return null when JWT not save', () => {
+    expect(getJwt()).toBeNull();
+    expect(getJwtAsAuthorizationHeader()).toBeNull();
   });
 
   it('should remove saved JWT', () => {
@@ -31,7 +60,7 @@ describe('auth-holder', () => {
       .spyOn(jwtDecodeModule, 'jwtDecode')
       .mockReturnValue(createJwtPayload(minuteLater));
 
-    saveJwt('JWT');
+    saveJwt(jwtString);
     removeJwt();
     expect(getJwt()).toBeNull();
   });
@@ -43,7 +72,7 @@ describe('auth-holder', () => {
       .spyOn(jwtDecodeModule, 'jwtDecode')
       .mockReturnValue(createJwtPayload(secondAgo));
 
-    saveJwt('JWT');
+    saveJwt(jwtString);
     expect(getJwt()).toBeNull();
   });
 });

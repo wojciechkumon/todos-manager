@@ -29,6 +29,15 @@ export const getJwt = (): JwtPayload | null => {
   return decoded;
 };
 
+export const getJwtAsAuthorizationHeader = (): string | null => {
+  const jwt = localStorage.getItem(JWT_STORAGE_KEY);
+  if (!jwt) {
+    return null;
+  }
+
+  return `Bearer ${jwt}`;
+};
+
 export const removeJwt = (): void => {
   localStorage.removeItem(JWT_STORAGE_KEY);
 };

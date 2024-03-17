@@ -1,7 +1,7 @@
 import { AxiosResponse, HttpStatusCode } from 'axios';
 import { Link, Typography } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -18,17 +18,17 @@ import {
 } from './registration-form-schema.ts';
 import { RHFInputField } from '../common/form/RHFInputField.tsx';
 import { register } from '../api/registration.ts';
-import { loginWithJwt } from '../auth/login-with-jwt.ts';
 import { ErrorResponse, ValidationError } from '../api/error-response.ts';
 import { useState } from 'react';
 import { snackbarMessages } from '../common/snackbar/snackbar-messages.ts';
 import { ErrorSnackbar } from '../common/snackbar/ErrorSnackbar.tsx';
 import { JwtResponse } from '../api/JwtResponse.ts';
 import { propagateBackendErrors } from '../common/form/propagate-backend-errors.ts';
+import { useLogin } from '../auth/hooks/useLogin.ts';
 
 export const RegistrationForm = () => {
   const intl = useIntl();
-  const navigate = useNavigate();
+  const loginToDashboard = useLogin();
   const formMethods = useForm<RegistrationFormSchema>({
     resolver: zodResolver(registrationFormSchema),
     defaultValues: defaultFormValues,
@@ -46,7 +46,7 @@ export const RegistrationForm = () => {
     }
 
     if (response.status === HttpStatusCode.Created) {
-      loginWithJwt(response.data as JwtResponse, navigate);
+      loginToDashboard(response.data as JwtResponse);
       return;
     }
     if (response.status === HttpStatusCode.BadRequest) {
@@ -84,6 +84,7 @@ export const RegistrationForm = () => {
               id: 'sy+pv5',
             })}
             inputProps={{
+              autoComplete: 'email',
               variant: 'outlined',
               className: 'w-full mb-4',
               required: true,
@@ -97,6 +98,7 @@ export const RegistrationForm = () => {
             })}
             inputProps={{
               type: 'password',
+              autoComplete: 'new-password',
               variant: 'outlined',
               className: 'w-full mb-4',
               required: true,

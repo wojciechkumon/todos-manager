@@ -1,14 +1,13 @@
 import { DottedLayout } from '../common/dotted-layout/DottedLayout.tsx';
 import { Header } from './Header/Header.tsx';
 import { getJwt } from '../auth/auth-holder.ts';
-import { useNavigate } from 'react-router-dom';
-import { routes } from '../config/routes.ts';
+import { useLogout } from '../auth/hooks/useLogout.ts';
 
 export const DashboardPage = () => {
-  const navigate = useNavigate();
+  const logout = useLogout();
   const jwtPayload = getJwt();
   if (!jwtPayload) {
-    navigate(routes.login);
+    logout();
     return null;
   }
 

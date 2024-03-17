@@ -1,15 +1,15 @@
 import { Link, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import { logout } from '../../auth/login-with-jwt.ts';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { useNavigate } from 'react-router-dom';
+import { useLogout } from '../../auth/hooks/useLogout.ts';
 
 interface HeaderProps {
   email: string;
 }
 
 export const Header = ({ email }: HeaderProps) => {
-  const navigate = useNavigate();
+  const logoutUser = useLogout();
+
   return (
     <nav className="sticky top-0 bg-stone-700">
       <div className="flex p-2">
@@ -24,7 +24,14 @@ export const Header = ({ email }: HeaderProps) => {
             </Typography>
           </div>
           <div className="ml-auto">
-            <Link href="" onClick={() => logout(navigate)} underline="none">
+            <Link
+              href=""
+              onClick={() => {
+                logoutUser();
+                return false;
+              }}
+              underline="none"
+            >
               <Typography variant="subtitle2">
                 <span className="mr-2 align-middle">
                   <span className="">
