@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
+  "author": "Wojciech Kumoń",
   "scripts": {
     "build": "tsc && vite build",
     "start:dev": "vite",

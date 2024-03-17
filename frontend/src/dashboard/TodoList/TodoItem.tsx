@@ -22,7 +22,11 @@ export const TodoItem = ({ todoItem, deleteTodoItem }: TodoItemProps) => {
             <Typography variant="body1">{todoItem.content}</Typography>
           </div>
           <div>
-            <DeleteOutlineIcon color="error" onClick={onDeleteClick} />
+            <DeleteOutlineIcon
+              color="error"
+              onClick={onDeleteClick}
+              data-testid="delete-icon"
+            />
           </div>
         </div>
         <div className="text-right">

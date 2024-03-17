@@ -39,8 +39,11 @@ Check the `README.md` files in the `api/` and `frontend/` directories for more d
 ### Assumptions/Decisions
 
 - YAGNI (You Ain't Gonna Need It). Features not required by the specification won't be implemented.
-  - For example there is no password recovery, or password changing, or email confirmation on registration, or user roles.
+  - For example there is no password recovery, or password changing, or email confirmation on registration, or user roles, or todo item updates.
   - This is a training project, so no assumptions that something more will be needed in the future.
 - Simplicity - avoiding doing things ready out-of-the-box.
 - Backend is implemented in a modular way to split responsibilities.
 - Todo items pagination is not mentioned, but it's implicitly required because fetching an unbounded list is a bad practice.
+
+#### CI
+The project uses GitHub Actions for CI. On each push both frontend and backend are built and tested.
