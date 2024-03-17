@@ -82,6 +82,19 @@ export const TodoList = ({
             <FormattedMessage defaultMessage="Your todo List" id="dBhbeB" />
           </Typography>
         </div>
+        {todoItems.length === 0 && !isFetching && !error && (
+          <div className="text-center mt-4">
+            <Typography variant="h6">
+              <FormattedMessage defaultMessage="No todos yet" id="GiEYdi" />
+            </Typography>
+            <Typography variant="subtitle1">
+              <FormattedMessage
+                defaultMessage="Create the first one above ☝️"
+                id="353y/M"
+              />
+            </Typography>
+          </div>
+        )}
         {todoItems.map((todo) => (
           <TodoItem
             key={todo.id}
