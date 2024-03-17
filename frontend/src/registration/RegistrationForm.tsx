@@ -20,8 +20,8 @@ import { RHFInputField } from '../common/form/RHFInputField.tsx';
 import { register } from '../api/registration.ts';
 import { ErrorResponse, ValidationError } from '../api/error-response.ts';
 import { useState } from 'react';
-import { snackbarMessages } from '../common/snackbar/snackbar-messages.ts';
-import { ErrorSnackbar } from '../common/snackbar/ErrorSnackbar.tsx';
+import { toastMessages } from '../common/toast/toast-messages.ts';
+import { Toast } from '../common/toast/Toast.tsx';
 import { JwtResponse } from '../api/JwtResponse.ts';
 import { propagateBackendErrors } from '../common/form/propagate-backend-errors.ts';
 import { useLogin } from '../auth/hooks/useLogin.ts';
@@ -33,7 +33,7 @@ export const RegistrationForm = () => {
     resolver: zodResolver(registrationFormSchema),
     defaultValues: defaultFormValues,
   });
-  const [snackbarMessage, setSnackbarMessage] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const onSubmit: SubmitHandler<RegistrationFormSchema> = async (data) => {
     let response: AxiosResponse<JwtResponse | ErrorResponse>;
@@ -41,7 +41,7 @@ export const RegistrationForm = () => {
       response = await register(data.email, data.password);
     } catch (e) {
       console.error('connection error on register', e);
-      setSnackbarMessage(snackbarMessages.CONNECTION_ERROR);
+      setToastMessage(toastMessages.CONNECTION_ERROR(intl));
       return;
     }
 
@@ -58,7 +58,7 @@ export const RegistrationForm = () => {
       return;
     }
 
-    setSnackbarMessage(snackbarMessages.INTERNAL_ERROR);
+    setToastMessage(toastMessages.INTERNAL_ERROR(intl));
   };
 
   return (
@@ -119,10 +119,11 @@ export const RegistrationForm = () => {
         >
           <FormattedMessage defaultMessage="Register" id="deEeEI" />
         </LoadingButton>
-        <ErrorSnackbar
-          open={!!snackbarMessage}
-          onClose={() => setSnackbarMessage(null)}
-          message={snackbarMessage}
+        <Toast
+          open={!!toastMessage}
+          onClose={() => setToastMessage(null)}
+          message={toastMessage}
+          type="error"
         />
       </form>
     </FormProvider>

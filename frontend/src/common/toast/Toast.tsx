@@ -1,21 +1,18 @@
 import { Alert, Snackbar } from '@mui/material';
 import { ReactNode } from 'react';
 
-interface ErrorSnackbarProps {
+export interface ToastProps {
   open: boolean;
   onClose: () => void;
   message: ReactNode;
+  type: 'success' | 'info' | 'warning' | 'error';
 }
 
-export const ErrorSnackbar = ({
-  open,
-  onClose,
-  message,
-}: ErrorSnackbarProps) => (
+export const Toast = ({ open, onClose, message, type }: ToastProps) => (
   <Snackbar open={open} autoHideDuration={6_000} onClose={onClose}>
     <Alert
       onClose={onClose}
-      severity="error"
+      severity={type}
       variant="filled"
       sx={{ width: '100%' }}
     >

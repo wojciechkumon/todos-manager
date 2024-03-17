@@ -1,20 +1,18 @@
 import { DottedLayout } from '../common/dotted-layout/DottedLayout.tsx';
 import { Header } from './Header/Header.tsx';
-import { getJwt } from '../auth/auth-holder.ts';
-import { useLogout } from '../auth/hooks/useLogout.ts';
+import { CreateTodoForm } from './CreateTodoForm/CreateTodoForm.tsx';
+import { useLoaderData } from 'react-router-dom';
+import { JwtPayload } from '../auth/auth-holder.ts';
 
 export const DashboardPage = () => {
-  const logout = useLogout();
-  const jwtPayload = getJwt();
-  if (!jwtPayload) {
-    logout();
-    return null;
-  }
+  const jwtPayload = useLoaderData() as JwtPayload;
 
   return (
     <DottedLayout>
       <Header email={jwtPayload.email} />
-      <div>Dashboard</div>
+      <div className="my-8">
+        <CreateTodoForm />
+      </div>
     </DottedLayout>
   );
 };

@@ -14,8 +14,8 @@ import { routes } from '../config/routes.ts';
 import { RHFInputField } from '../common/form/RHFInputField.tsx';
 import { ErrorResponse, ValidationError } from '../api/error-response.ts';
 import { useState } from 'react';
-import { snackbarMessages } from '../common/snackbar/snackbar-messages.ts';
-import { ErrorSnackbar } from '../common/snackbar/ErrorSnackbar.tsx';
+import { toastMessages } from '../common/toast/toast-messages.ts';
+import { Toast } from '../common/toast/Toast.tsx';
 import {
   defaultFormValues,
   loginFormSchema,
@@ -33,7 +33,7 @@ export const LoginForm = () => {
     resolver: zodResolver(loginFormSchema),
     defaultValues: defaultFormValues,
   });
-  const [snackbarMessage, setSnackbarMessage] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [invalidCredentialsError, setInvalidCredentialsError] =
     useState<boolean>(false);
 
@@ -45,7 +45,7 @@ export const LoginForm = () => {
       response = await login(data.email, data.password);
     } catch (e) {
       console.error('connection error on login', e);
-      setSnackbarMessage(snackbarMessages.CONNECTION_ERROR);
+      setToastMessage(toastMessages.CONNECTION_ERROR(intl));
       return;
     }
 
@@ -66,7 +66,7 @@ export const LoginForm = () => {
       return;
     }
 
-    setSnackbarMessage(snackbarMessages.INTERNAL_ERROR);
+    setToastMessage(toastMessages.INTERNAL_ERROR(intl));
   };
 
   return (
@@ -129,10 +129,11 @@ export const LoginForm = () => {
         >
           <FormattedMessage defaultMessage="Login" id="AyGauy" />
         </LoadingButton>
-        <ErrorSnackbar
-          open={!!snackbarMessage}
-          onClose={() => setSnackbarMessage(null)}
-          message={snackbarMessage}
+        <Toast
+          open={!!toastMessage}
+          onClose={() => setToastMessage(null)}
+          message={toastMessage}
+          type="error"
         />
       </form>
     </FormProvider>

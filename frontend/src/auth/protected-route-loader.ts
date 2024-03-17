@@ -9,8 +9,9 @@ export function protectedRouteLoader() {
   // If the user is not logged in and tries to access `/protected`, we redirect
   // them to `/login` with a `from` parameter that allows login to redirect back
   // to this page upon successful authentication
-  if (!getJwt()) {
+  const jwt = getJwt();
+  if (!jwt) {
     return redirect(routes.login);
   }
-  return null;
+  return jwt;
 }
