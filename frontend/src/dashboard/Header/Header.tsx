@@ -11,7 +11,7 @@ export const Header = ({ email }: HeaderProps) => {
   const logoutUser = useLogout();
 
   return (
-    <nav className="sticky top-0 bg-stone-700">
+    <nav className="sticky top-0 bg-stone-700 z-30">
       <div className="flex p-2">
         <div className="max-w-screen-lg w-full mx-auto flex items-center">
           <div>

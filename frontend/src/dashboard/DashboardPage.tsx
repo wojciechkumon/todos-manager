@@ -36,10 +36,10 @@ export const DashboardPage = () => {
   return (
     <DottedLayout>
       <Header email={jwtPayload.email} />
-      <div className="my-8">
+      <div className="py-8">
         <CreateTodoForm onTodoCreated={resetQuery} />
       </div>
-      <div className="my-8">
+      <div className="pb-8">
         <TodoList
           todoItems={todoItems}
           error={error}

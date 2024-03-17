@@ -79,7 +79,7 @@ export const TodoList = ({
       <div className="m-auto">
         <div>
           <Typography variant="h4" align="center">
-            <FormattedMessage defaultMessage="Todo List" id="qWjzaH" />
+            <FormattedMessage defaultMessage="Your todo List" id="dBhbeB" />
           </Typography>
         </div>
         {todoItems.map((todo) => (
