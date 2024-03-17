@@ -10,6 +10,8 @@ export interface RegistrationDto {
 
 export interface JwtResponse {
   access_token: string;
+  token_type: string;
+  expires: number;
 }
 
 export const register = (

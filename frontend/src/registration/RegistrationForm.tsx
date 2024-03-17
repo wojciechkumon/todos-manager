@@ -18,7 +18,7 @@ import {
 } from './registration-form-schema.ts';
 import { RHFInputField } from '../common/form/RHFInputField.tsx';
 import { JwtResponse, register } from '../api/registration.ts';
-import { loginWithJwt } from '../login/login-with-jwt.ts';
+import { loginWithJwt } from '../auth/login-with-jwt.ts';
 import {
   ErrorResponse,
   ValidationErrorMessages,
@@ -47,8 +47,7 @@ export const RegistrationForm = () => {
     }
 
     if (response.status === HttpStatusCode.Created) {
-      const jwt = (response.data as JwtResponse).access_token;
-      loginWithJwt(jwt, navigate);
+      loginWithJwt((response.data as JwtResponse), navigate);
       return;
     }
     if (response.status === HttpStatusCode.BadRequest) {
