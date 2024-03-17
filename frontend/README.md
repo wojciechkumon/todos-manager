@@ -27,6 +27,15 @@ $ npm run start:dev
 $ npm run build
 ```
 
+## Run in docker
+A single command to install dependencies, build, and run the app in a docker container.
+It uses `nginx` to serve the static files.
+All you need is [docker](https://docs.docker.com/) installed on your machine and then run:
+```bash
+$ docker build -t todos-manager-frontend . && docker run --rm -p 8000:80 todos-manager-frontend
+```
+Visit `http://localhost:8000` in your browser.
+
 ## Test
 
 ```bash
