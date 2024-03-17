@@ -47,7 +47,7 @@ export const RegistrationForm = () => {
     }
 
     if (response.status === HttpStatusCode.Created) {
-      loginWithJwt((response.data as JwtResponse), navigate);
+      loginWithJwt(response.data as JwtResponse, navigate);
       return;
     }
     if (response.status === HttpStatusCode.BadRequest) {

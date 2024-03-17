@@ -5,6 +5,7 @@ import { RegistrationPage } from './registration/RegistrationPage.tsx';
 import { LoginPage } from './login/LoginPage.tsx';
 import { routes } from './config/routes.ts';
 import { protectedRouteLoader } from './auth/protected-route-loader.ts';
+import { redirectLoggedInToDashboard } from './auth/redirect-logged-in-to-dashboard.ts';
 
 const router = createBrowserRouter([
   {
@@ -16,11 +17,13 @@ const router = createBrowserRouter([
   {
     path: routes.login,
     element: <LoginPage />,
+    loader: redirectLoggedInToDashboard,
     errorElement: <ErrorPage />,
   },
   {
     path: routes.register,
     element: <RegistrationPage />,
+    loader: redirectLoggedInToDashboard,
     errorElement: <ErrorPage />,
   },
 ]);

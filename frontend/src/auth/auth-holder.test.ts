@@ -5,7 +5,7 @@ describe('auth-holder', () => {
     const nowInSeconds = Date.now() / 1_000;
     const minuteLater = nowInSeconds + 60;
 
-    saveJwt('JWT', minuteLater)
+    saveJwt('JWT', minuteLater);
     expect(getJwt()).toBe('JWT');
   });
 

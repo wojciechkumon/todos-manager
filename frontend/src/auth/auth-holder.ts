@@ -14,7 +14,7 @@ export const getJwt = (): string | null => {
   }
 
   const expires = parseInt(expirationString, 10);
-  const isValid = expires > (Date.now() / 1_000);
+  const isValid = expires > Date.now() / 1_000;
   if (!isValid) {
     removeJwt();
     return null;
