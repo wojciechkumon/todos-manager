@@ -10,14 +10,10 @@ import {
   PAGE_SIZE,
   TODOS_QUERY_KEY,
 } from '../api/todos/fetch-todos-page.ts';
-import { TodosFetchingError } from '../api/todos/TodosFetchingError.ts';
-import { HttpStatusCode } from 'axios';
-import { useLogout } from '../auth/hooks/useLogout.ts';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 
 export const DashboardPage = () => {
   const jwtPayload = useLoaderData() as JwtPayload;
-  const [isFetchingError, setFetchingError] = useState(false);
 
   const { data, error, isFetching, fetchNextPage, hasNextPage } =
     useInfiniteQuery({
@@ -26,31 +22,22 @@ export const DashboardPage = () => {
       initialPageParam: 1,
       getNextPageParam: ({ metadata }) =>
         metadata.hasNextPage ? metadata.pageNumber + 1 : undefined,
-      enabled: !isFetchingError,
     });
   const todoItems = useMemo(
     () => data?.pages.flatMap((page) => page.data) ?? [],
     [data],
   );
   const queryClient = useQueryClient();
-  const onTodoCreated = useCallback(
+  const resetQuery = useCallback(
     () => queryClient.resetQueries({ queryKey: TODOS_QUERY_KEY }),
     [queryClient],
   );
-
-  const logout = useLogout();
-  if (error instanceof TodosFetchingError) {
-    if (error.status === HttpStatusCode.Unauthorized && !isFetchingError) {
-      setFetchingError(true);
-      logout();
-    }
-  }
 
   return (
     <DottedLayout>
       <Header email={jwtPayload.email} />
       <div className="my-8">
-        <CreateTodoForm onTodoCreated={onTodoCreated} />
+        <CreateTodoForm onTodoCreated={resetQuery} />
       </div>
       <div className="my-8">
         <TodoList
@@ -59,6 +46,7 @@ export const DashboardPage = () => {
           isFetching={isFetching}
           fetchNextPage={fetchNextPage}
           hasNextPage={hasNextPage}
+          resetQuery={resetQuery}
         />
       </div>
     </DottedLayout>

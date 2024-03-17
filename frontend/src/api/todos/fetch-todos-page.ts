@@ -20,7 +20,7 @@ export interface PageDto<T> {
   metadata: PageMetadataDto;
 }
 
-export const PAGE_SIZE = 5;
+export const PAGE_SIZE = 10;
 
 export const TODOS_QUERY_KEY = ['todos'];
 

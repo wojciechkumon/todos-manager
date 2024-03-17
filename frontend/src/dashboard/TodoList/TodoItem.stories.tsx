@@ -25,6 +25,7 @@ export const ShortTodo: Story = {
       content: 'Short todo',
       createdAt: '2022-01-01T00:00:00Z',
     },
+    deleteTodoItem: () => {},
   },
 };
 
@@ -38,5 +39,6 @@ export const LongTodo: Story = {
         ', long todo, long todo, long todo, long todo, long todo, long todo, long todo',
       createdAt: '2022-01-01T00:00:00Z',
     },
+    deleteTodoItem: () => {},
   },
 };

@@ -82,7 +82,7 @@ export const CreateTodoForm = ({ onTodoCreated }: CreateTodoFormProps) => {
 
     setToastMessage({
       type: 'error',
-      message: toastMessages.INTERNAL_ERROR(intl),
+      message: toastMessages.SOMETHING_WENT_ERROR(intl),
     });
   };
 

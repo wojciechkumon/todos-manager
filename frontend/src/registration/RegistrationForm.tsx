@@ -58,7 +58,7 @@ export const RegistrationForm = () => {
       return;
     }
 
-    setToastMessage(toastMessages.INTERNAL_ERROR(intl));
+    setToastMessage(toastMessages.SOMETHING_WENT_ERROR(intl));
   };
 
   return (

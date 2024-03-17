@@ -6,7 +6,7 @@ export const toastMessages = {
       defaultMessage: 'Connection error',
       id: '+zd6eR',
     }),
-  INTERNAL_ERROR: (intl: IntlShape) =>
+  SOMETHING_WENT_ERROR: (intl: IntlShape) =>
     intl.formatMessage({
       defaultMessage: 'Something went wrong',
       id: 'JqiqNj',
