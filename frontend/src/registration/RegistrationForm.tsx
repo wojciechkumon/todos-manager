@@ -24,7 +24,7 @@ import {
   ValidationErrorMessages,
 } from '../api/error-response.ts';
 import { useState } from 'react';
-import { snackbarMessages } from '../common/snackbar-messages.ts';
+import { snackbarMessages } from '../common/snackbar/snackbar-messages.ts';
 import { ErrorSnackbar } from '../common/snackbar/ErrorSnackbar.tsx';
 
 export const RegistrationForm = () => {

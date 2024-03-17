@@ -1,4 +1,4 @@
-import { DottedLayout } from '../common/DottedLayout.tsx';
+import { DottedLayout } from '../common/dotted-layout/DottedLayout.tsx';
 import { RegistrationForm } from './RegistrationForm.tsx';
 
 export const RegistrationPage = () => (
