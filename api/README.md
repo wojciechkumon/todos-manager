@@ -35,6 +35,16 @@ $ npm run build
 $ npm run start:prod
 ```
 
+## Run in docker
+A single command to install dependencies, build, and run the app in a [docker](https://docs.docker.com/) container.
+`./Dockerfile` is designed to use from `../docker-compose.yml` with the whole setup (see more in `../README.md`).
+It copies `./.env.docker-compose` to the container to use `postgres` as the database host instead of `localhost`.
+So, you have to remove line `COPY .env.docker-compose .env` from `Dockerfile` to use without the full compose.
+```bash
+$ docker build -t todos-manager-api . && docker run --rm -p 3000:3000 todos-manager-api
+```
+Visit `http://localhost:3000` in your browser.
+
 ## Test
 
 ```bash
