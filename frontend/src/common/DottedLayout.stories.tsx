@@ -6,7 +6,7 @@ const meta = {
   component: DottedLayout,
   decorators: [
     (Story) => (
-      <div className='bg-stone-800 p-6'>
+      <div className="bg-stone-800 p-6">
         <Story />
       </div>
     ),

@@ -1,9 +1,10 @@
 import { Alert, Snackbar } from '@mui/material';
+import { ReactNode } from 'react';
 
 interface ErrorSnackbarProps {
   open: boolean;
   onClose: () => void;
-  message: string;
+  message: ReactNode;
 }
 
 export const ErrorSnackbar = ({

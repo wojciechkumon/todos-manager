@@ -41,3 +41,9 @@ See `package.json` for more commands.
 ### I18n
 Internationalization is done using `react-intl`.
 Currently, it supports English only, but it's ready for more languages.
+
+### Storybook
+Use Storybook to see, develop, and test components in isolation.
+```bash
+$ npm run storybook
+```
