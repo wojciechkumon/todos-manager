@@ -1,29 +1,34 @@
-const JWT_STORAGE_KEY = 'SESSION';
-const JWT_EXPIRATION = 'SESSION_EXPIRATION';
+import { jwtDecode } from 'jwt-decode';
 
-export const saveJwt = (jwt: string, expiresTime: number): void => {
+const JWT_STORAGE_KEY = 'SESSION';
+
+export interface JwtPayload {
+  email: string;
+  sub: string; // user ID
+  exp: number; // expires at
+  iat: number; // issued at
+}
+
+export const saveJwt = (jwt: string): void => {
   localStorage.setItem(JWT_STORAGE_KEY, jwt);
-  localStorage.setItem(JWT_EXPIRATION, String(expiresTime));
 };
 
-export const getJwt = (): string | null => {
-  const expirationString = localStorage.getItem(JWT_EXPIRATION);
+export const getJwt = (): JwtPayload | null => {
   const jwt = localStorage.getItem(JWT_STORAGE_KEY);
-  if (!expirationString || !jwt) {
+  if (!jwt) {
     return null;
   }
 
-  const expires = parseInt(expirationString, 10);
-  const isValid = expires > Date.now() / 1_000;
+  const decoded = jwtDecode<JwtPayload>(jwt);
+  const isValid = decoded.exp > Date.now() / 1_000;
   if (!isValid) {
     removeJwt();
     return null;
   }
 
-  return jwt;
+  return decoded;
 };
 
 export const removeJwt = (): void => {
   localStorage.removeItem(JWT_STORAGE_KEY);
-  localStorage.removeItem(JWT_EXPIRATION);
 };

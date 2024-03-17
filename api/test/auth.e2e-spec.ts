@@ -59,7 +59,6 @@ describe('AuthController (e2e)', () => {
         .then(async (response) => {
           const body: JwtDto = response.body;
           expect(body.token_type).toEqual('Bearer');
-          expect(body.expires).toBeGreaterThan(Date.now() / 1_000);
           expect(body.access_token).toBeDefined();
           const parsedJwt = await jwtService.verifyAsync(body.access_token);
           expect(parsedJwt.sub).toEqual(userId);
@@ -206,7 +205,6 @@ describe('AuthController (e2e)', () => {
         .then(async (response) => {
           const body: JwtDto = response.body;
           expect(body.token_type).toEqual('Bearer');
-          expect(body.expires).toBeGreaterThan(Date.now() / 1_000);
           expect(body.access_token).toBeDefined();
           const parsedJwt = await jwtService.verifyAsync(body.access_token);
           expect(parsedJwt.sub).toEqual(user.id);

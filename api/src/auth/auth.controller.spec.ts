@@ -11,7 +11,6 @@ describe('AuthController', () => {
   const jwtDto: JwtDto = {
     access_token: 'JWT',
     token_type: 'Bearer',
-    expires: 1711270023,
   };
   let authController: AuthController;
   let authService: AuthService;

@@ -50,12 +50,6 @@ describe('AuthService', () => {
 
       expect(result?.access_token).toBeDefined();
       expect(result?.token_type).toEqual('Bearer');
-      expect(result?.expires).toBeGreaterThan(
-        Date.now() / 1_000 + 7 * 24 * 60 * 60 * 0.9,
-      );
-      expect(result?.expires).toBeLessThan(
-        Date.now() / 1_000 + 7 * 24 * 60 * 60 * 1.1,
-      );
       expect(registerMock).toHaveBeenCalled();
       const createUserDto: CreateUserDto = registerMock.mock.calls[0][0];
       expect(createUserDto.email).toEqual(registrationDto.email);

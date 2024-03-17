@@ -7,7 +7,7 @@ export const loginWithJwt = (
   jwtResponse: JwtResponse,
   navigate: NavigateFunction,
 ): void => {
-  saveJwt(jwtResponse.access_token, jwtResponse.expires);
+  saveJwt(jwtResponse.access_token);
   navigate(routes.dashboard);
 };
 

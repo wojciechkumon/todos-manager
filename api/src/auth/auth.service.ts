@@ -65,11 +65,9 @@ export class AuthService {
 
   private async createJwtResponse(jwtPayload: JwtPayload): Promise<JwtDto> {
     const jwt = await this.jwtService.signAsync(jwtPayload);
-    const decodedJwt = this.jwtService.decode(jwt);
     return {
       token_type: 'Bearer',
       access_token: jwt,
-      expires: decodedJwt.exp,
     };
   }
 }
