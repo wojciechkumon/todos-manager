@@ -3,6 +3,7 @@ import { reactIntl } from './reactIntl';
 import { reactRouterParameters, withRouter } from 'storybook-addon-react-router-v6';
 import { createTheme, StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import '../src/index.css';
 
 export const theme = createTheme({
@@ -14,6 +15,8 @@ export const theme = createTheme({
   }
 });
 
+const queryClient = new QueryClient();
+
 const preview: Preview = {
   globals: {
     locale: reactIntl.defaultLocale,
@@ -24,10 +27,12 @@ const preview: Preview = {
     (Story) => (
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <div id="root">
-            <Story />
-          </div>
+          <QueryClientProvider client={queryClient}>
+            <CssBaseline />
+            <div id="root">
+              <Story />
+            </div>
+          </QueryClientProvider>
         </ThemeProvider>
       </StyledEngineProvider>
     ),

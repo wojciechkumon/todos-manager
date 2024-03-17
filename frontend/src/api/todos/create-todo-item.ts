@@ -1,8 +1,8 @@
 import { AxiosResponse } from 'axios';
-import { getAxios } from './http-client.ts';
-import { apiUrls } from './api-urls.ts';
-import { getJwtAsAuthorizationHeader } from '../auth/auth-holder.ts';
-import { ErrorResponse } from './error-response.ts';
+import { getAxios } from '../http-client.ts';
+import { apiUrls } from '../api-urls.ts';
+import { getJwtAsAuthorizationHeader } from '../../auth/auth-holder.ts';
+import { ErrorResponse } from '../error-response.ts';
 
 export interface CreateTodoItemDto {
   content: string;
@@ -21,10 +21,6 @@ export const createTodoItem = (
   return getAxios().post<TodoItemDto | ErrorResponse>(
     apiUrls.todos.create,
     createTodoItemDto,
-    {
-      headers: {
-        Authorization: getJwtAsAuthorizationHeader(),
-      },
-    },
+    { headers: { Authorization: getJwtAsAuthorizationHeader() } },
   );
 };

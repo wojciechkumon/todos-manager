@@ -13,6 +13,7 @@ import {
 } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import { IntlProvider } from 'react-intl';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const rootElement = document.getElementById('root')!;
 
@@ -47,13 +48,17 @@ const theme = createTheme({
   },
 });
 
+const queryClient = new QueryClient();
+
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <IntlProvider locale="en" defaultLocale="en" textComponent={Fragment}>
-          <CssBaseline />
-          <App />
+          <QueryClientProvider client={queryClient}>
+            <CssBaseline />
+            <App />
+          </QueryClientProvider>
         </IntlProvider>
       </ThemeProvider>
     </StyledEngineProvider>

@@ -7,7 +7,8 @@ export const apiUrls = {
   },
   todos: {
     create: `${configuration.apiBaseUrl}/todos`,
-    listPage: `${configuration.apiBaseUrl}/todos`,
+    listPage: (pageNumber: number, pageSize: number) =>
+      `${configuration.apiBaseUrl}/todos?pageNumber=${pageNumber}&pageSize=${pageSize}`,
     delete: (id: string) => `${configuration.apiBaseUrl}/todos/${id}`,
   },
 };

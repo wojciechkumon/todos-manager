@@ -16,14 +16,21 @@ import {
   TodoFormSchema,
 } from './create-todo-form-schema.ts';
 import { useState } from 'react';
-import { createTodoItem, TodoItemDto } from '../../api/todos.ts';
+import {
+  createTodoItem,
+  TodoItemDto,
+} from '../../api/todos/create-todo-item.ts';
 import { AxiosResponse, HttpStatusCode } from 'axios';
 import { toastMessages } from '../../common/toast/toast-messages.ts';
 import { propagateBackendErrors } from '../../common/form/propagate-backend-errors.ts';
 import { ErrorResponse, ValidationError } from '../../api/error-response.ts';
 import { useLogout } from '../../auth/hooks/useLogout.ts';
 
-export const CreateTodoForm = () => {
+interface CreateTodoFormProps {
+  onTodoCreated?: () => void;
+}
+
+export const CreateTodoForm = ({ onTodoCreated }: CreateTodoFormProps) => {
   const logout = useLogout();
   const intl = useIntl();
   const formMethods = useForm<TodoFormSchema>({
@@ -56,6 +63,7 @@ export const CreateTodoForm = () => {
           id: 'MAkIeU',
         }),
       });
+      onTodoCreated?.();
       formMethods.reset(defaultFormValues);
       return;
     }

@@ -34,12 +34,7 @@ export const Header = ({ email }: HeaderProps) => {
             >
               <Typography variant="subtitle2">
                 <span className="mr-2 align-middle">
-                  <span className="">
-                    <LogoutIcon
-                      sx={{ fontSize: 24 }}
-                      className="align-middle"
-                    />
-                  </span>
+                  <LogoutIcon sx={{ fontSize: 24 }} className="align-middle" />
                 </span>
                 <FormattedMessage defaultMessage="Logout" id="C81/uG" />
               </Typography>
