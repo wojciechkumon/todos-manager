@@ -37,7 +37,7 @@ $ npm run start:prod
 
 ## Run in docker
 A single command to install dependencies, build, and run the app in a [docker](https://docs.docker.com/) container.
-`./Dockerfile` is designed to use it from `../docker-compose.yml` with the whole setup (see more in `../README.md`).
+`./Dockerfile` is designed to use it from `../docker-compose.yml` with the whole setup (see more in [../README.md](../README.md)).
 It copies `./.env.docker-compose` to the container to use `postgres` as the database host instead of `localhost`.
 So, you need to remove line `COPY .env.docker-compose .env` from `Dockerfile` to use it without the full docker-compose.
 ```bash

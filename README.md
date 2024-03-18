@@ -34,7 +34,7 @@ You need:
 3. Build `npm run build`
 4. Serve the built files (not production-ready solution): `npm run start:prod` (use a proper web server for production deployment like nginx used in the docker-compose solution)
 
-Check the `README.md` files in the `api/` and `frontend/` directories for more details about each of them.
+Check [README.md for API](api/README.md) and [README.md for frontend](frontend/README.md) for more details about each of them.
 They include screenshots, setting environments variables in `.env` file, development mode, tests, lint, etc.
 
 ### Assumptions/Decisions/Comments
