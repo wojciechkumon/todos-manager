@@ -15,7 +15,7 @@ export const TodoItem = ({ todoItem, deleteTodoItem }: TodoItemProps) => {
   }, [todoItem.id, deleteTodoItem]);
 
   return (
-    <div className="rounded bg-stone-700 p-4 mt-2 m-auto">
+    <div className="todo-item rounded bg-stone-700 p-4 mt-2 m-auto">
       <div className="w-96">
         <div className="flex">
           <div className="mr-auto">
