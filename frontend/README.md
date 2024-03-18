@@ -42,10 +42,27 @@ Visit `http://localhost:8080` in your browser.
 $ npm run test
 ```
 
+## Lint
+
+```bash
+$ npm run lint
+```
+
 See `package.json` for more commands.
 
 
 ## Development
+
+### Project structure
+The project has the following structure:
+- `src/api` - API related code like URLs, calling endpoints via HTTP, request/response types
+- `src/auth` - authentication related code like saving/reading/parsing JWT, executing login/logout, etc
+- `src/common` - reusable components and utilities
+- `src/config` - dotenv and route URLs config
+- `src/dashboard` - dashboard page with todo items
+- `src/error` - error page
+- `src/login` - login page
+- `src/registration` - registration page
 
 ### I18n
 Internationalization is done using `react-intl`.
@@ -56,3 +73,21 @@ Use Storybook to see, develop, and test components in isolation.
 ```bash
 $ npm run storybook
 ```
+
+![Storybook](docs/storybook.png "Storybook")
+
+
+### UI
+
+A few screenshots from the app:
+- Registration page
+
+![Registration](docs/registration.png "Registration")
+
+- Login page
+
+![Login](docs/login.png "Login")
+
+- Dashboard with todo items
+
+![Dashboard](docs/dashboard.png "Dashboard")

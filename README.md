@@ -34,16 +34,27 @@ You need:
 3. Build `npm run build`
 4. Serve the built files (not production-ready solution): `npm run start:prod` (use a proper web server for production deployment like nginx used in the docker-compose solution)
 
-Check the `README.md` files in the `api/` and `frontend/` directories for more details like setting environments variables in `.env` file, development mode, tests, lint, etc.
+Check the `README.md` files in the `api/` and `frontend/` directories for more details about each of them.
+They include screenshots, setting environments variables in `.env` file, development mode, tests, lint, etc.
 
-### Assumptions/Decisions
+### Assumptions/Decisions/Comments
 
 - YAGNI (You Ain't Gonna Need It). Features not required by the specification won't be implemented.
   - For example there is no password recovery, or password changing, or email confirmation on registration, or user roles, or todo item updates.
   - This is a training project, so no assumptions that something more will be needed in the future.
 - Simplicity - avoiding doing things ready out-of-the-box.
-- Backend is implemented in a modular way to split responsibilities.
-- Todo items pagination is not mentioned, but it's implicitly required because fetching an unbounded list is a bad practice.
+- Backend
+  - Implemented in a modular way to split responsibilities.
+  - Layered to separate concerns like data validation, controller, business logic and data access.
+  - Registration endpoint doesn't use any email confirmations, so I implemented JWT returning directly from the registration endpoint. It saves a few clicks to not repeat the login with the same email + password.
+  - Missing metrics/monitoring and JSON logging on the backend side. It's a good practice to have it but the tools should be specified to use them.
+- Frontend
+  - I wanted to use next.js because it's what I recently use for frontend development (with out-of-the-box features like server-side-rendering). The requirements mention "React Router" which I understand as `react-router` library, while next.js has its own routing. I decided to follow the requirement and chose [vite](https://vitejs.dev/) tooling to learn something new (I'm very familiar with webpack from the version `1`, so I remember all migrations and less and less mandatory configs there, but a training task should teach me new things).
+  - Todo items pagination is not mentioned, but it's implicitly required because fetching an unbounded list is a bad practice. They are paginated using infinite scroll. You may even not notice that with localhost setup (it's too fast to see the spinner).
+  - Any HTTP 401 Unauthorized response automatically logs out the user and redirects to the login page. Other error responses are handled by toasts (snackbars) or a banner inside the app. Both login and registration pages redirect to the dashboard if the user is already logged in.
+  - UI e2e tests are not implemented. Due to the time limit, I decided to skip it. I have experience with [cypress](https://www.cypress.io/), so I would integrate it with more time.
+  - All forms (registration, login, todo item creation) are validated on the frontend side including details like checking for a strong password on registration (of course it's validated on the backend too).
 
-#### CI
+
+#### Continuous Integration
 The project uses GitHub Actions for CI. On each push both frontend and backend are built and tested.
