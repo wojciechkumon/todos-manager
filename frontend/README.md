@@ -42,6 +42,26 @@ Visit `http://localhost:8080` in your browser.
 $ npm run test
 ```
 
+## E2E tests
+End-to-end tests are implemented with [cypress](https://www.cypress.io/) in `cypress/` directory.
+There are no mocks, so the tests check user interactions against a real system.
+They require a running frontend at the default dev port (`5173`) that has a connection to a running backend.
+Running `docker-compose up` in the repo main directory will be enough, but you need to set the base url to http://localhost:8080 (nginx port).
+See the commands below how to do it.
+
+```bash
+# run the tests
+$ npm run cypress:test:e2e
+
+# run the tests with a base url matching the docker-compose setup
+$ npm run cypress:test:e2e -- --config baseUrl=http://localhost:8080
+```
+
+```bash
+# open cypress UI to run tests interactively or for development
+$ npm run cypress:open
+```
+
 ## Lint
 
 ```bash
@@ -63,6 +83,7 @@ The project has the following structure:
 - `src/error` - error page
 - `src/login` - login page
 - `src/registration` - registration page
+- `cypress` - e2e tests
 
 ### I18n
 Internationalization is done using `react-intl`.
